@@ -160,6 +160,7 @@
   <ItemGroup>
     <ClCompile Include="..\glm-0.9.9.8\glm\detail\glm.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="GL_Context.cpp" />
@@ -493,6 +494,7 @@
     <ClInclude Include="..\glm-0.9.9.8\glm\simd\trigonometric.h" />
     <ClInclude Include="..\glm-0.9.9.8\glm\simd\vector_relational.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="GL_Context.h" />
     <ClInclude Include="Renderer.h" />

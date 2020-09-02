@@ -10,8 +10,8 @@
 class Mesh {
  public:
     Mesh(const std::string& fileName);
-    std::vector<float>& getVertices();
-    std::vector<float>& getNormals();
+    std::vector<float> getVertices();
+    std::vector<float> getNormals();
     
  private:
     std::vector<float> Vertices;

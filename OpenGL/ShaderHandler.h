@@ -1,6 +1,8 @@
 #pragma once
 
-#include <GL/glew.h>
+#include <string>
+#include <iostream>
+#include <GLEW/glew.h>
 
 /*
 Handles all shader reader and loading

@@ -1,6 +1,7 @@
 #include <vector>
 
 #include "Mesh.h"
+#include "Entity.h"
 #include "GL_Context.h"
 
 const std::string WINDOW_NAME = std::string("Simple Engine");
@@ -18,6 +19,7 @@ void InitProgram(void) {
 int main(int argc, char** argv) {
     InitProgram();
     Mesh testMesh = Mesh("cube.obj");
+    
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
 
     while(!curContext.ExitWindow()) {

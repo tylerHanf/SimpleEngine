@@ -1,4 +1,5 @@
 #include "ShaderHandler.h"
+#include <fstream>
 
 /*
 Show the program log (linking)
@@ -49,9 +50,9 @@ bool ShaderHandler::checkOpenGLError(void) {
 /*
 Read in shader source code from file
 */
-std::string readShaderSource(const char *filepath) {
+std::string ShaderHandler::readShaderSource(const char *filepath) {
     std::string content;
-    std::ifstream fileStream(filePath, std::ios::in);
+    std::ifstream fileStream(filepath, std::ios::in);
     std::string line = "";
     while (!fileStream.eof()) {
 	getline(fileStream, line);
@@ -64,7 +65,7 @@ std::string readShaderSource(const char *filepath) {
 /*
 Create shader program with vertex and frag shader
 */
-GLuint createShaderProgram(const char *vp, const char *fp) {
+GLuint ShaderHandler::createShaderProgram(const char *vp, const char *fp) {
     GLint vertCompiled;
     GLint fragCompiled;
     GLint linked;

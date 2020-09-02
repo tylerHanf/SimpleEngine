@@ -7,7 +7,7 @@ Takes window name, width of screen, height of screen
 */
 GL_Context::GL_Context(int width, int height, const std::string windowName) {
     window = NULL;
-       if (!Init(width, height, windowName)) {
+    if (!Init(width, height, windowName)) {
 	return;
     }
 }
@@ -15,9 +15,38 @@ GL_Context::GL_Context(int width, int height, const std::string windowName) {
 /*
 Clears color buffer
 */
-void GL_Context::Clear(void) {
+void GL_Context::ClearColorBuffer(void) {
     glClear(GL_COLOR_BUFFER_BIT);
 }
+
+/*
+Clears depth buffer bit
+*/
+void GL_Context::ClearDepthBuffer(void) {
+    glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+/*
+Use specified rendering program
+*/
+void GL_Context::UseProgram(GLuint renderingProgram) {
+    glUseProgram(renderingProgram);
+}
+
+/*
+Get a uniform variable location
+*/
+GLuint GL_Context::GetUniformLocation(GLuint renderingProgram, const char* varname) {
+    return glGetUniformLocation(renderingProgram, varname);
+}
+
+/*
+Get the current size of the frame buffer
+*/
+void GL_Context::GetFrameBufferSize(int* width, int* height) {
+    glfwGetFramebufferSize(window, width, height);
+}
+    
 
 /*
 Swap current buffer with back buffer

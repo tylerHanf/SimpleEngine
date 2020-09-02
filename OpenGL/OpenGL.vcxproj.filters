@@ -20,6 +20,9 @@
     <ClCompile Include="ShaderHandler.cpp">
       <Filter>ShaderHandler</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExternalAPIs">
@@ -84,6 +87,12 @@
     </Filter>
     <Filter Include="ShaderHandler\include">
       <UniqueIdentifier>{ec46a5da-1a46-4cf6-b372-46fe1a9f1892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{8dc7f1ad-3b29-4cb2-9826-7b3254ca9aaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity\include">
+      <UniqueIdentifier>{9d7e30f1-908e-4e70-b753-8f3f42187a42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1076,6 +1085,9 @@
     </ClInclude>
     <ClInclude Include="ShaderHandler.h">
       <Filter>ShaderHandler\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Entity\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
