@@ -19,7 +19,7 @@ glm::vec3 Entity::getLocation(void) {
 
 //Bad implementation if entity has multiple meshes
 const void* Entity::getMeshVertices(void) {
-    return mesh->getVertices();
+    return (const void*) mesh->getVertices();
 }
 
 //Bad implementation if entity has multiple meshes

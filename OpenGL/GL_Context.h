@@ -3,6 +3,8 @@
 
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
+#include <GLM/glm.hpp>
+#include <GLM/gtc/type_ptr.hpp>
 
 class GL_Context {
  public:
@@ -17,6 +19,8 @@ class GL_Context {
     void Poll(void);
     void Terminate(void);
     bool ExitWindow(void);
+    void SetMatrix4fv(GLuint varLoc, glm::mat4 value);
+    double GetTime(void);
 
  private:
     GLFWwindow* window;

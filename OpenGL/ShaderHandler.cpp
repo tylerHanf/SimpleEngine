@@ -1,5 +1,6 @@
 #include "ShaderHandler.h"
 #include <fstream>
+#include "Debug.h"
 
 /*
 Show the program log (linking)
@@ -72,7 +73,7 @@ GLuint ShaderHandler::createShaderProgram(const char *vp, const char *fp) {
 
     std::string vshaderSourceStr = readShaderSource(vp);
     std::string fshaderSourceStr = readShaderSource(fp);
-
+    
     const char *vshaderSource = vshaderSourceStr.c_str();
     const char *fshaderSource = fshaderSourceStr.c_str();
 

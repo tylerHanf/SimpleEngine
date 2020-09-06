@@ -27,10 +27,14 @@ Mesh::Mesh(const std::string& filename) {
     }
 }
 
-std::vector<float> Mesh::getVertices() {
-    return Vertices;
+const float* Mesh::getVertices() {
+    return &Vertices[0];
 }
 
 std::vector<float> Mesh::getNormals() {
     return Normals;
+}
+
+int Mesh::getNumVertices(void) {
+    return Vertices.size();
 }

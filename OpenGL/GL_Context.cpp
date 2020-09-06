@@ -85,6 +85,20 @@ bool GL_Context::ExitWindow(void) {
 }
 
 /*
+Sets a 4x4 Matrix Uniform var in GPU
+*/
+void GL_Context::SetMatrix4fv(GLuint varLoc, glm::mat4 value) {
+    glUniformMatrix4fv(varLoc, 1, GL_FALSE,  glm::value_ptr(value));
+}
+
+/*
+Get current time
+*/
+double GL_Context::GetTime(void) {
+    return glfwGetTime();
+}
+
+/*
 Inits GLFW and GLEW
 */
 bool GL_Context::Init(int width, int height, const std::string windowName) {

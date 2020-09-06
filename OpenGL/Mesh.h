@@ -6,12 +6,15 @@
 /*
   Contains Data for a single Mesh
   The mesh is loaded via Assimp
+
+  TODO: handle textures...same class?
  */
 class Mesh {
  public:
     Mesh(const std::string& fileName);
-    std::vector<float> getVertices();
-    std::vector<float> getNormals();
+    const float* getVertices(void);
+    std::vector<float> getNormals(void);
+    int getNumVertices(void);
     
  private:
     std::vector<float> Vertices;
