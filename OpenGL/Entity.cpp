@@ -1,8 +1,9 @@
 #include "Entity.h"
+#include "Debug.h"
 
-Entity::Entity(const char* filename, glm::vec3 location) {
+Entity::Entity(const char* filename, glm::vec3 locationObj) {
     mesh = new Mesh(filename);
-    this->location = location;
+    location = locationObj;
 }
 
 Entity::~Entity(void) {
@@ -20,11 +21,6 @@ glm::vec3 Entity::getLocation(void) {
 //Bad implementation if entity has multiple meshes
 const void* Entity::getMeshVertices(void) {
     return (const void*) mesh->getVertices();
-}
-
-//Bad implementation if entity has multiple meshes
-std::vector<float> Entity::getMeshNormals(void) {
-    return mesh->getNormals();
 }
 
 int Entity::numMeshVertices(void) {

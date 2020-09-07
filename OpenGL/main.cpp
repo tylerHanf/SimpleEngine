@@ -15,24 +15,30 @@ Handles program initialization,
 not context init
 */
 void InitProgram(void) {
-    width = 640;
-    height = 480;
+    width = 800;
+    height = 800;
 }
 
+/*
+TODOs:
+Add camera class
+setup per object translation functions
+figure out lookat function
+handle movement
+check on multi-object rendering
+*/
 int main(int argc, char** argv) {
     InitProgram();
     Mesh testMesh = Mesh("cube.obj");
     Entity firstEntity = Entity("cube.obj", glm::vec3(1.0f, 0.0f, 0.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
     Renderer renderer = Renderer(VERT_SHADER_PATH, FRAG_SHADER_PATH, &curContext);
-
+    
     std::vector<Entity*> entities;
     entities.push_back(&firstEntity);
 
     renderer.LoadData(entities);
 
-
-    
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
 	renderer.Display(curContext.getWindow(), curContext.GetTime(), entities);
@@ -40,7 +46,6 @@ int main(int argc, char** argv) {
 	curContext.Poll();
     }
 
-    //curContext.Terminate();
-    //Debug::Instance().PrintError("Working");
+    curContext.Terminate();
     return 0;
 }

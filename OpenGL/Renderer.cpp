@@ -20,17 +20,18 @@ void Renderer::LoadData(std::vector<Entity*> entities) {
     //Note the number of VAOs, just for initial build
     int numVAOs = 1;
     int numVBOs = entities.size();
+    
     vao.resize(numVAOs);
     vbo.resize(numVBOs);
     
-    glGenVertexArrays(numVAOs, (GLuint*)&vao);
+    glGenVertexArrays(numVAOs, (GLuint*)&vao[0]);
     glBindVertexArray(vao[0]);
-    glGenBuffers(numVBOs, (GLuint*)&vbo);
-
+    glGenBuffers(numVBOs, (GLuint*)&vbo[0]);
+    
     //Assume each entity only has one mesh
     for (int i=0; i < entities.size(); i++) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
-	glBufferData(GL_ARRAY_BUFFER, entities[i]->numMeshVertices(),
+	glBufferData(GL_ARRAY_BUFFER, entities[i]->numMeshVertices()*sizeof(float),
 		     entities[i]->getMeshVertices(), GL_STATIC_DRAW); 
     }
 }
@@ -52,19 +53,19 @@ void Renderer::Display(GLFWwindow* window, double currentTime,
 
     pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
     //TODO: Make camera Object and define lookat object
-    vMat = glm::lookAt(glm::vec3(0.0f, 1.0f*5.0, 20.0f), glm::vec3(3.0f, 2.0f, -8.0f),
+    vMat = glm::lookAt(glm::vec3(0.0f, 0.0f, 8.0f), glm::vec3(8.0f, 0.0f, 0.0f),
 		       glm::vec3(0.0f, 1.0f, 0.0f));
+
     mvStack.push(vMat);
 
-    float* meshes = (float*)entities[0]->getMeshVertices();
-    for (int i=0; i<entities[0]->numMeshVertices(); i++) {
-	Debug::Instance().PrintError(std::to_string(meshes[i]));
-    }
-    
     for (int i=0; i<entities.size(); i++) {
 	mvStack.push(mvStack.top());
 	context->SetMatrix4fv(projLoc, pMat);
-	mvStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	mvStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(8.0f, 0.0f, 1.0f));
+	mvStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime*5,
+				     glm::vec3(0.0f, 2.0f, 0.0f));
+	mvStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime,
+				     glm::vec3(2.0f, 0.0f, 0.0f));
 	context->SetMatrix4fv(mvLoc, mvStack.top());
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);

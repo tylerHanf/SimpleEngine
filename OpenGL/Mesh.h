@@ -13,10 +13,8 @@ class Mesh {
  public:
     Mesh(const std::string& fileName);
     const float* getVertices(void);
-    std::vector<float> getNormals(void);
     int getNumVertices(void);
     
  private:
     std::vector<float> Vertices;
-    std::vector<float> Normals;
 };

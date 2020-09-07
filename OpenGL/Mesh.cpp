@@ -10,7 +10,7 @@ Contains Mesh data (currently just vertices and normals)
 */
 Mesh::Mesh(const std::string& filename) {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(filename, 0);
+    const aiScene* scene = importer.ReadFile(filename, aiProcess_Triangulate);
 
     if (!scene) {
 	Debug::Instance().PrintError("Failed to read mesh from file");
@@ -20,19 +20,11 @@ Mesh::Mesh(const std::string& filename) {
 	Vertices.push_back(scene->mMeshes[0]->mVertices[i].x);
 	Vertices.push_back(scene->mMeshes[0]->mVertices[i].y);
 	Vertices.push_back(scene->mMeshes[0]->mVertices[i].z);
-
-	Normals.push_back(scene->mMeshes[0]->mNormals[i].x);
-	Normals.push_back(scene->mMeshes[0]->mNormals[i].y);
-	Normals.push_back(scene->mMeshes[0]->mNormals[i].z);
     }
 }
 
 const float* Mesh::getVertices() {
     return &Vertices[0];
-}
-
-std::vector<float> Mesh::getNormals() {
-    return Normals;
 }
 
 int Mesh::getNumVertices(void) {
