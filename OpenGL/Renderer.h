@@ -16,7 +16,7 @@ class Renderer {
  public:
     Renderer(const char* vPath, const char* fPath, GL_Context* contextObj);
     void Display(GLFWwindow* window, double currentTime,
-		 std::vector<Entity> entities);
+		 std::vector<Entity*> entities);
     void LoadData(std::vector<Entity*> entities);
     
  private:

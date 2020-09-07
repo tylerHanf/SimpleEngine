@@ -39,9 +39,10 @@ void Renderer::LoadData(std::vector<Entity*> entities) {
 Main display function
 */
 void Renderer::Display(GLFWwindow* window, double currentTime,
-		       std::vector<Entity> entities) {
+		       std::vector<Entity*> entities) {
     context->ClearDepthBuffer();
     context->ClearColorBuffer();
+    context->UseProgram(renderingProgram);
     
     mvLoc = context->GetUniformLocation(renderingProgram, "mv_matrix");
     projLoc = context->GetUniformLocation(renderingProgram, "proj_matrix");
@@ -54,23 +55,27 @@ void Renderer::Display(GLFWwindow* window, double currentTime,
     vMat = glm::lookAt(glm::vec3(0.0f, 1.0f*5.0, 20.0f), glm::vec3(3.0f, 2.0f, -8.0f),
 		       glm::vec3(0.0f, 1.0f, 0.0f));
     mvStack.push(vMat);
-    
-    Debug::Instance().PrintError(std::to_string(entities.size()));
+
+    float* meshes = (float*)entities[0]->getMeshVertices();
+    for (int i=0; i<entities[0]->numMeshVertices(); i++) {
+	Debug::Instance().PrintError(std::to_string(meshes[i]));
+    }
     
     for (int i=0; i<entities.size(); i++) {
 	mvStack.push(mvStack.top());
 	context->SetMatrix4fv(projLoc, pMat);
-	mvStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	mvStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	context->SetMatrix4fv(mvLoc, mvStack.top());
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	glDrawArrays(GL_TRIANGLES, 0, entities[i].numMeshVertices()/3);
+	glDrawArrays(GL_TRIANGLES, 0, entities[i]->numMeshVertices()/3);
 	mvStack.pop();
     }
     mvStack.pop();
 }
-    
+
