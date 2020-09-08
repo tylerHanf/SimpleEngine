@@ -26,6 +26,7 @@ setup per object translation functions
 figure out lookat function
 handle movement
 check on multi-object rendering
+Allow resizable windows!!!!!
 */
 int main(int argc, char** argv) {
     InitProgram();
