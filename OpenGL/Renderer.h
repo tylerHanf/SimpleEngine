@@ -5,6 +5,7 @@
 
 #include "Entity.h"
 #include "GL_Context.h"
+#include "Camera.h"
 
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
@@ -16,7 +17,7 @@ class Renderer {
  public:
     Renderer(const char* vPath, const char* fPath, GL_Context* contextObj);
     void Display(GLFWwindow* window, double currentTime,
-		 std::vector<Entity*> entities);
+		 std::vector<Entity*> entities, Camera* camera);
     void LoadData(std::vector<Entity*> entities);
     
  private:

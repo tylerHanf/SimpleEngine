@@ -99,6 +99,20 @@ double GL_Context::GetTime(void) {
 }
 
 /*
+Sets the window resize callback function
+*/
+void GL_Context::ResizeCallback(GLFWwindowsizefun function) {
+    glfwSetWindowSizeCallback(window, function);
+}
+
+/*
+Sets the key input callback
+*/
+void GL_Context::SetKeyCallback(GLFWkeyfun function) {
+    glfwSetKeyCallback(window, function);
+}
+
+/*
 Inits GLFW and GLEW
 */
 bool GL_Context::Init(int width, int height, const std::string windowName) {
@@ -126,6 +140,5 @@ bool GL_Context::Init(int width, int height, const std::string windowName) {
     }
 
     glfwSwapInterval(1);
-
     return true;
 }

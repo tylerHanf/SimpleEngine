@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "GL_Context.h"
 #include "Renderer.h"
+#include "Camera.h"
 
 const std::string WINDOW_NAME = std::string("Simple Engine");
 const char* VERT_SHADER_PATH = "vertShader.glsl";
@@ -19,32 +20,59 @@ void InitProgram(void) {
     height = 800;
 }
 
+void resizeCallback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
+void GetKeyInput(GLFWwindow* window, Camera* camera) {
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+       camera->MoveForward();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+	camera->MoveBack();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+	camera->MoveRight();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+	camera->MoveLeft();
+    }
+}
+
 /*
 TODOs:
 Add camera class
 setup per object translation functions
-figure out lookat function
 handle movement
-check on multi-object rendering
-Allow resizable windows!!!!!
+Consider implementing scripting
+    capabilities
 */
 int main(int argc, char** argv) {
     InitProgram();
     Mesh testMesh = Mesh("cube.obj");
-    Entity firstEntity = Entity("cube.obj", glm::vec3(1.0f, 0.0f, 0.0f));
+    Camera camera = Camera(glm::vec3(0.0f, 0.0f, -8.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
     Renderer renderer = Renderer(VERT_SHADER_PATH, FRAG_SHADER_PATH, &curContext);
     
     std::vector<Entity*> entities;
-    entities.push_back(&firstEntity);
-
+    for (int i=0; i<10; i++) {
+	Entity* newEntity = new Entity("Cube.obj", glm::vec3(8.0f, 0.0f, 0.0f));
+	entities.push_back(newEntity);
+    }
+    
     renderer.LoadData(entities);
+    curContext.ResizeCallback(&resizeCallback);
 
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
-	renderer.Display(curContext.getWindow(), curContext.GetTime(), entities);
+	renderer.Display(curContext.getWindow(), curContext.GetTime(),
+			 entities, &camera);
 	curContext.Swap();
 	curContext.Poll();
+	GetKeyInput(curContext.getWindow(), &camera);
     }
 
     curContext.Terminate();

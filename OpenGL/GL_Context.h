@@ -21,9 +21,12 @@ class GL_Context {
     bool ExitWindow(void);
     void SetMatrix4fv(GLuint varLoc, glm::mat4 value);
     double GetTime(void);
+    void ResizeCallback(GLFWwindowsizefun function);
+    void SetKeyCallback(GLFWkeyfun function);
 
  private:
     GLFWwindow* window;
 
     bool Init(int width, int height, const std::string windowName);
+
 };
