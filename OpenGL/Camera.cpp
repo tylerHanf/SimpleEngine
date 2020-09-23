@@ -5,6 +5,11 @@ Camera::Camera(glm::vec3 inPosition) {
     front = glm::vec3(0.0f, 0.0f, -1.0f);
     up = glm::vec3(0.0f, 1.0f, 0.0f);
     speed = 1.5;
+    xpos, ypos = 400;
+    lastX, lastY = 400;
+    sensitivity = 0.1f;
+    yaw = -90.0f;
+    pitch = 0;
 }
 
 void Camera::ChangeLocation(glm::vec3 newPosition) {
@@ -45,4 +50,29 @@ float Camera::getSpeed(void) {
 
 void Camera::setSpeed(float newSpeed) {
     speed = newSpeed;
+}
+
+void Camera::LookAround(double xpos, double ypos) {
+    float xoffset = xpos - lastX;
+    float yoffset = ypos - lastY;
+
+    lastX = xpos;
+    lastY = ypos;
+
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    if (pitch > 89.0f)
+	pitch = 89.0f;
+    if (pitch < -89.0f)
+	pitch = -89.0f;
+
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(-pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front = glm::normalize(direction);
 }

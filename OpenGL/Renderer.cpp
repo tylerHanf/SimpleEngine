@@ -1,16 +1,18 @@
 #include "Renderer.h"
-#include "ShaderHandler.h"
 #include "Debug.h"
+#include "ShaderHandler.h"
 
 /*
 Renderer constructor, also makes rendering program
 Must be called after GL_Context obj is made
 */
-Renderer::Renderer(const char* vPath, const char* fPath, GL_Context* contextObj) {
-    ShaderHandler sHandler;
+Renderer::Renderer(GL_Context* contextObj, std::vector<GLuint> shaders) {
+    //ShaderHandler sHandler;
     width, height = 0;
     context = contextObj;
-    renderingProgram = sHandler.createShaderProgram(vPath, fPath);
+    //GLuint renderingProgram = sHandler.createShaderProgram(vPath, fPath);
+    //renderingPrograms.push_back(renderingProgram);
+    renderingPrograms = shaders;
 }
 
 /*
@@ -43,10 +45,10 @@ void Renderer::Display(GLFWwindow* window, double currentTime,
 		       std::vector<Entity*> entities, Camera* camera) {
     context->ClearDepthBuffer();
     context->ClearColorBuffer();
-    context->UseProgram(renderingProgram);
+    context->UseProgram(renderingPrograms[0]);
     
-    mvLoc = context->GetUniformLocation(renderingProgram, "mv_matrix");
-    projLoc = context->GetUniformLocation(renderingProgram, "proj_matrix");
+    mvLoc = context->GetUniformLocation(renderingPrograms[0], "mv_matrix");
+    projLoc = context->GetUniformLocation(renderingPrograms[0], "proj_matrix");
 
     context->GetFrameBufferSize(&width, &height);
     aspect = (float)width/(float)height;
@@ -62,12 +64,15 @@ void Renderer::Display(GLFWwindow* window, double currentTime,
     for (int i=0; i<entities.size(); i++) {
 	mvStack.push(mvStack.top());
 	mvStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(8.0f, 0.0f, 1.0f));
+
+	/*
 	mvStack.push(mvStack.top());
 	mvStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime*5,
 				     glm::vec3(0.0f, 2.0f, 0.0f));
 	mvStack.push(mvStack.top());
 	mvStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime,
 				     glm::vec3(2.0f, 0.0f, 0.0f));
+	*/
 	context->SetMatrix4fv(mvLoc, mvStack.top());
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
@@ -79,5 +84,4 @@ void Renderer::Display(GLFWwindow* window, double currentTime,
 	glDrawArrays(GL_TRIANGLES, 0, entities[i]->numMeshVertices()/3);
 	mvStack.pop(); mvStack.pop();
     }
-    mvStack.pop();
 }

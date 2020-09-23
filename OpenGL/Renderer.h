@@ -15,14 +15,16 @@ Handles all rendering operations
 */
 class Renderer {
  public:
-    Renderer(const char* vPath, const char* fPath, GL_Context* contextObj);
+    Renderer(GL_Context* contextObj, std::vector<GLuint> shaders);
+    //Renderer(const char* vPath, const char* fPath, GL_Context* contextObj);
     void Display(GLFWwindow* window, double currentTime,
 		 std::vector<Entity*> entities, Camera* camera);
     void LoadData(std::vector<Entity*> entities);
     
  private:
-    GLuint renderingProgram;
+    //GLuint renderingProgram;
     std::vector<GLuint> vao, vbo;
+    std::vector<GLuint> renderingPrograms;
     GLuint mvLoc, projLoc;
     glm::mat4 pMat, mMat, vMat, mvMat;
     std::stack<glm::mat4> mvStack;

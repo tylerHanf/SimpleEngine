@@ -5,10 +5,13 @@
 #include "GL_Context.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "ShaderHandler.h"
 
 const std::string WINDOW_NAME = std::string("Simple Engine");
 const char* VERT_SHADER_PATH = "vertShader.glsl";
 const char* FRAG_SHADER_PATH = "fragShader.glsl";
+const char* VERT_LIGHT_SHADER_PATH = "basicLightVert.glsl";
+const char* FRAG_LIGHT_SHADER_PATH = "basicLightFrag.glsl";
 int width, height;
 
 /*
@@ -42,29 +45,46 @@ void GetKeyInput(GLFWwindow* window, Camera* camera) {
     }
 }
 
+void GetMouseInput(GLFWwindow* window, Camera* camera) {
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+    camera->LookAround(xpos, ypos);
+}
+
 /*
 TODOs:
-Add camera class
 setup per object translation functions
-handle movement
+handle movement -> WIP
+Fix screen size changing
+Add debugging input features
 Consider implementing scripting
     capabilities
 */
 int main(int argc, char** argv) {
     InitProgram();
-    Mesh testMesh = Mesh("cube.obj");
+    //Mesh testMesh = Mesh("cube.obj");
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, -8.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
-    Renderer renderer = Renderer(VERT_SHADER_PATH, FRAG_SHADER_PATH, &curContext);
-    
+    ShaderHandler sHandler;
+    std::vector<GLuint> shaders;
+    shaders.push_back(sHandler.createShaderProgram(VERT_SHADER_PATH, FRAG_SHADER_PATH));
+    Renderer renderer = Renderer(&curContext, shaders);
+
+    /*
     std::vector<Entity*> entities;
     for (int i=0; i<10; i++) {
 	Entity* newEntity = new Entity("Cube.obj", glm::vec3(8.0f, 0.0f, 0.0f));
 	entities.push_back(newEntity);
     }
+    */
     
+    std::vector<Entity*> entities;
+    Entity* House = new Entity("house.obj", glm::vec3(8.0f, 0.0f, 0.0f));
+    entities.push_back(House);
     renderer.LoadData(entities);
     curContext.ResizeCallback(&resizeCallback);
+    curContext.SetInputMode();
+    glEnable(GL_LIGHTING);
 
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
@@ -73,6 +93,7 @@ int main(int argc, char** argv) {
 	curContext.Swap();
 	curContext.Poll();
 	GetKeyInput(curContext.getWindow(), &camera);
+	GetMouseInput(curContext.getWindow(), &camera);
     }
 
     curContext.Terminate();
