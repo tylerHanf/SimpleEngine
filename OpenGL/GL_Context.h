@@ -23,7 +23,8 @@ class GL_Context {
     double GetTime(void);
     void ResizeCallback(GLFWwindowsizefun function);
     void SetKeyCallback(GLFWkeyfun function);
-
+    void SetInputMode(void);
+    
  private:
     GLFWwindow* window;
 

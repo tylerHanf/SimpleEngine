@@ -1,6 +1,60 @@
 #include "ShaderHandler.h"
 #include <fstream>
+#include <GLM/gtc/type_ptr.hpp>
 #include "Debug.h"
+
+/*
+Check if different types have constant uniforms
+*/
+ShaderHandler::ShaderHandler(const char* vertp, const char* fragp) {
+    createShaderProgram(vertp, fragp);
+    setupUniforms();
+}
+
+GLuint ShaderHandler::GetHandle() {
+    return handler;
+}
+
+void ShaderHandler::SetMat4Uniform(Uniform loc, glm::mat4 val) {
+    switch (loc) {
+    case MODEL:
+	GL_SetMat4(basic.model, val);
+	break;
+    case VIEW:
+	GL_SetMat4(basic.view, val);
+	break;
+    case PROJECTION:
+	GL_SetMat4(basic.projection, val);
+	break;
+    default:
+	Debug::Instance().PrintError("Failed to set mat4, Uniform not found");
+    }
+}
+
+void ShaderHandler::SetVec3Uniform(Uniform loc, glm::vec3 val) {
+    switch (loc) {
+    case E_COLOR:
+	GL_SetVec3(basic.objColor, val);
+	break;
+    case L_POS:
+	GL_SetVec3(light.lightPos, val);
+	break;
+    case L_COLOR:
+	GL_SetVec3(light.lightColor, val);
+	break;
+    default:
+	Debug::Instance().PrintError("Failed to set vec3, Uniform not found");
+    }
+}
+
+void ShaderHandler::GL_SetMat4(GLuint loc, glm::mat4 val) {
+    glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(val));
+}
+
+void ShaderHandler::GL_SetVec3(GLuint loc, glm::vec3 val) {
+    glUniform3fv(loc, 1, glm::value_ptr(val));
+}
+
 
 /*
 Show the program log (linking)
@@ -66,7 +120,7 @@ std::string ShaderHandler::readShaderSource(const char *filepath) {
 /*
 Create shader program with vertex and frag shader
 */
-GLuint ShaderHandler::createShaderProgram(const char *vp, const char *fp) {
+void ShaderHandler::createShaderProgram(const char *vp, const char *fp) {
     GLint vertCompiled;
     GLint fragCompiled;
     GLint linked;
@@ -111,5 +165,42 @@ GLuint ShaderHandler::createShaderProgram(const char *vp, const char *fp) {
 	printProgramLog(vfProgram);
     }
 
-    return vfProgram;
+    handler = vfProgram;
+}
+
+void ShaderHandler::setupUniforms(void) {
+    int count = 0;
+    const GLsizei size = 32;
+    GLchar name[size];
+    GLenum *type = 0;
+    GLint act_size = 0;
+    GLuint uLoc = 0;
+    glGetProgramiv(handler, GL_ACTIVE_UNIFORMS, &count);
+    for (int i=0; i<count; i++) {
+	glGetActiveUniform(handler, (GLuint)i, size, NULL, &act_size, type, name);
+	uLoc = glGetUniformLocation(handler, name);
+	if (!std::strcmp(name, "model")) {
+	    basic.model = uLoc;
+	}
+	else if (!std::strcmp(name, "view")) {
+	    basic.view = uLoc;
+	}
+	else if (!std::strcmp(name, "projection")) {
+	    basic.projection = uLoc;
+	}
+	else if (!std::strcmp(name, "objColor")) {
+	    basic.objColor = uLoc;
+	}
+	else if (!std::strcmp(name, "lightPos")) {
+	    light.lightPos = uLoc;
+	}
+	else if (!std::strcmp(name, "lightColor")) {
+	    light.lightColor = uLoc;
+	}
+	else {
+	    Debug::Instance().PrintError("Unknown Uniform:");
+	    Debug::Instance().PrintError(name);
+	}
+    }
+
 }

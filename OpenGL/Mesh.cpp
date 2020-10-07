@@ -20,6 +20,9 @@ Mesh::Mesh(const std::string& filename) {
 	Vertices.push_back(scene->mMeshes[0]->mVertices[i].x);
 	Vertices.push_back(scene->mMeshes[0]->mVertices[i].y);
 	Vertices.push_back(scene->mMeshes[0]->mVertices[i].z);
+	Vertices.push_back(scene->mMeshes[0]->mNormals[i].x);
+	Vertices.push_back(scene->mMeshes[0]->mNormals[i].y);
+	Vertices.push_back(scene->mMeshes[0]->mNormals[i].z);
     }
 }
 

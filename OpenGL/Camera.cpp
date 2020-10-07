@@ -4,7 +4,7 @@ Camera::Camera(glm::vec3 inPosition) {
     position = glm::vec3(0.0f, 0.0f, 3.0f);
     front = glm::vec3(0.0f, 0.0f, -1.0f);
     up = glm::vec3(0.0f, 1.0f, 0.0f);
-    speed = 1.5;
+    speed = 5.0;
     xpos, ypos = 400;
     lastX, lastY = 400;
     sensitivity = 0.1f;

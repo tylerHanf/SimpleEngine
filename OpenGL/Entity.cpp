@@ -1,8 +1,13 @@
 #include "Entity.h"
 #include "Debug.h"
 
-Entity::Entity(const char* filename, glm::vec3 locationObj) {
-    mesh = new Mesh(filename);
+Entity::Entity(const char* filename, glm::vec3 locationObj, Entity_Type aObjType) :
+    objType(aObjType)
+{
+    if (objType != Entity_Type(LIGHT))
+        mesh = new Mesh(filename);
+    else
+	mesh = NULL;
     location = locationObj;
 }
 
@@ -18,6 +23,10 @@ glm::vec3 Entity::getLocation(void) {
     return location;
 }
 
+const Entity_Type Entity::getEntityType(void) {
+    return objType;
+}
+
 //Bad implementation if entity has multiple meshes
 const void* Entity::getMeshVertices(void) {
     return (const void*) mesh->getVertices();
@@ -26,4 +35,4 @@ const void* Entity::getMeshVertices(void) {
 int Entity::numMeshVertices(void) {
     return mesh->getNumVertices();
 }
-
+ 

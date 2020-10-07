@@ -62,29 +62,23 @@ Consider implementing scripting
 */
 int main(int argc, char** argv) {
     InitProgram();
-    //Mesh testMesh = Mesh("cube.obj");
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, -8.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
-    ShaderHandler sHandler;
-    std::vector<GLuint> shaders;
-    shaders.push_back(sHandler.createShaderProgram(VERT_SHADER_PATH, FRAG_SHADER_PATH));
+    ShaderHandler baseHandler(VERT_SHADER_PATH, FRAG_SHADER_PATH);
+    ShaderHandler lightHandler(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
+    std::vector<ShaderHandler*> shaders;
+    shaders.push_back(&baseHandler);
+    shaders.push_back(&lightHandler);
     Renderer renderer = Renderer(&curContext, shaders);
 
-    /*
     std::vector<Entity*> entities;
-    for (int i=0; i<10; i++) {
-	Entity* newEntity = new Entity("Cube.obj", glm::vec3(8.0f, 0.0f, 0.0f));
-	entities.push_back(newEntity);
-    }
-    */
-    
-    std::vector<Entity*> entities;
-    Entity* House = new Entity("house.obj", glm::vec3(8.0f, 0.0f, 0.0f));
+    Entity* House = new Entity("house.obj", glm::vec3(8.0f, 0.0f, 0.0f), Entity_Type(WORLD_OBJ));
     entities.push_back(House);
     renderer.LoadData(entities);
     curContext.ResizeCallback(&resizeCallback);
     curContext.SetInputMode();
     glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
 
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
