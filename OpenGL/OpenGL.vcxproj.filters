@@ -23,6 +23,18 @@
     <ClCompile Include="Entity.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ModeHandler.cpp">
+      <Filter>ModeHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityFileHandler.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExternalAPIs">
@@ -93,6 +105,24 @@
     </Filter>
     <Filter Include="Entity\include">
       <UniqueIdentifier>{9d7e30f1-908e-4e70-b753-8f3f42187a42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{743d73e6-37c7-4f4f-99ee-cfb5289c136f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera\include">
+      <UniqueIdentifier>{ec5ef711-6a5b-4484-a664-76a0a53562d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{ff2bde5d-da38-4074-ae7d-19e96bb289b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModeHandler">
+      <UniqueIdentifier>{1b12bb45-c7e7-41b8-93db-9d828baee8e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ModeHandler\include">
+      <UniqueIdentifier>{73641f5c-916a-4c11-98d7-980e4863da77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\include">
+      <UniqueIdentifier>{352f8a9b-8b09-4aaf-9850-3546a24d5a8e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1088,6 +1118,18 @@
     </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Entity\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera\include</Filter>
+    </ClInclude>
+    <ClInclude Include="ModeHandler.h">
+      <Filter>ModeHandler\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Editor\include</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityFileHandler.h">
+      <Filter>Editor\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,8 @@
 #include "Renderer.h"
 #include "Camera.h"
 #include "ShaderHandler.h"
+#include "ModeHandler.h"
+#include "EntityFileHandler.h"
 
 const std::string WINDOW_NAME = std::string("Simple Engine");
 const char* VERT_SHADER_PATH = "vertShader.glsl";
@@ -61,6 +63,12 @@ Consider implementing scripting
     capabilities
 */
 int main(int argc, char** argv) {
+    std::vector<Entity*> entities;
+    EntityFileHandler filehandler;
+    
+    filehandler.LoadEntities(entities);
+    
+    //ModeHandler mode = ModeHandler((const char**) argv);
     InitProgram();
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, -8.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
@@ -71,9 +79,9 @@ int main(int argc, char** argv) {
     shaders.push_back(&lightHandler);
     Renderer renderer = Renderer(&curContext, shaders);
 
-    std::vector<Entity*> entities;
-    Entity* House = new Entity("house.obj", glm::vec3(8.0f, 0.0f, 0.0f), Entity_Type(WORLD_OBJ));
-    entities.push_back(House);
+    //    std::vector<Entity*> entities;
+    //Entity* House = new Entity("house.obj", glm::vec3(8.0f, 0.0f, 0.0f), Entity_Type(WORLD_OBJ));
+    //entities.push_back(House);
     renderer.LoadData(entities);
     curContext.ResizeCallback(&resizeCallback);
     curContext.SetInputMode();

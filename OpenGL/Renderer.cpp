@@ -53,9 +53,9 @@ void Renderer::Display(GLFWwindow* window, double currentTime,
     
     renderingPrograms[1]->SetMat4Uniform(Uniform(PROJECTION), pMat);
     renderingPrograms[1]->SetMat4Uniform(Uniform(VIEW), vMat);
-    renderingPrograms[1]->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(1.0f, 0.8f, 0.5f));
-    renderingPrograms[1]->SetVec3Uniform(Uniform(L_POS), glm::vec3(0.0f, 10.0f, 1.0f));
-    renderingPrograms[1]->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 1.0f));
+    renderingPrograms[1]->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(0.9f, 0.8f, 0.9f));
+    renderingPrograms[1]->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
+    renderingPrograms[1]->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
     mMat = glm::translate(glm::mat4(1.0f), glm::vec3(8.0f, 0.0f, 1.0f));
     mvStack.push(mMat);
