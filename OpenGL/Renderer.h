@@ -17,9 +17,7 @@ Handles all rendering operations
 class Renderer {
  public:
     Renderer(GL_Context* contextObj, std::vector<ShaderHandler*> &shaders);
-    //Renderer(const char* vPath, const char* fPath, GL_Context* contextObj);
-    void Display(GLFWwindow* window, double currentTime,
-		 std::vector<Entity*> entities, Camera* camera);
+    void Display(std::vector<Entity*> entities, Camera* camera);
     void LoadData(std::vector<Entity*> entities);
     
  private:

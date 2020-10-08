@@ -78,10 +78,7 @@ int main(int argc, char** argv) {
     shaders.push_back(&baseHandler);
     shaders.push_back(&lightHandler);
     Renderer renderer = Renderer(&curContext, shaders);
-
-    //    std::vector<Entity*> entities;
-    //Entity* House = new Entity("house.obj", glm::vec3(8.0f, 0.0f, 0.0f), Entity_Type(WORLD_OBJ));
-    //entities.push_back(House);
+   
     renderer.LoadData(entities);
     curContext.ResizeCallback(&resizeCallback);
     curContext.SetInputMode();
@@ -90,8 +87,7 @@ int main(int argc, char** argv) {
 
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
-	renderer.Display(curContext.getWindow(), curContext.GetTime(),
-			 entities, &camera);
+	renderer.Display(entities, &camera);
 	curContext.Swap();
 	curContext.Poll();
 	GetKeyInput(curContext.getWindow(), &camera);

@@ -38,8 +38,7 @@ void Renderer::LoadData(std::vector<Entity*> entities) {
 /*
 Main display function
 */
-void Renderer::Display(GLFWwindow* window, double currentTime,
-		       std::vector<Entity*> entities, Camera* camera) {
+void Renderer::Display(std::vector<Entity*> entities, Camera* camera) {
     context->ClearDepthBuffer();
     context->ClearColorBuffer();
     context->UseProgram(renderingPrograms[1]->GetHandle());
