@@ -6,7 +6,7 @@
       <Filter>ExternalAPIs\include\GLM\detail</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Mesh</Filter>
+      <Filter>EntityHandler\Entity\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>Debug</Filter>
@@ -21,7 +21,7 @@
       <Filter>ShaderHandler</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>Entity</Filter>
+      <Filter>EntityHandler\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Camera</Filter>
@@ -32,8 +32,14 @@
     <ClCompile Include="Editor.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="EntityFileHandler.cpp">
-      <Filter>Editor</Filter>
+    <ClCompile Include="EntityHandler.cpp">
+      <Filter>EntityHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="DataFileHandler.cpp">
+      <Filter>Editor\DataFileHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>ShaderHandler\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,12 +76,6 @@
     <Filter Include="ExternalAPIs\include\GLM\simd">
       <UniqueIdentifier>{f27ad05c-99da-401a-b360-43fc3b218c48}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mesh">
-      <UniqueIdentifier>{fc54f9b5-b20d-4b4c-be6f-94f032c30cab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mesh\include">
-      <UniqueIdentifier>{1e48e7e6-34a6-4e6c-9eb1-0bbd7805f1e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{6a12cee2-34be-4557-9cc8-9ebe0f3ad6e6}</UniqueIdentifier>
     </Filter>
@@ -100,12 +100,6 @@
     <Filter Include="ShaderHandler\include">
       <UniqueIdentifier>{ec46a5da-1a46-4cf6-b372-46fe1a9f1892}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entity">
-      <UniqueIdentifier>{8dc7f1ad-3b29-4cb2-9826-7b3254ca9aaf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entity\include">
-      <UniqueIdentifier>{9d7e30f1-908e-4e70-b753-8f3f42187a42}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{743d73e6-37c7-4f4f-99ee-cfb5289c136f}</UniqueIdentifier>
     </Filter>
@@ -123,6 +117,36 @@
     </Filter>
     <Filter Include="Editor\include">
       <UniqueIdentifier>{352f8a9b-8b09-4aaf-9850-3546a24d5a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EntityHandler">
+      <UniqueIdentifier>{9578f8b9-d604-4be2-b662-bd3057512ca5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EntityHandler\include">
+      <UniqueIdentifier>{498970df-e21f-42df-8862-9575706085b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EntityHandler\Entity">
+      <UniqueIdentifier>{8dc7f1ad-3b29-4cb2-9826-7b3254ca9aaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EntityHandler\Entity\include">
+      <UniqueIdentifier>{9d7e30f1-908e-4e70-b753-8f3f42187a42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EntityHandler\Entity\Mesh">
+      <UniqueIdentifier>{fc54f9b5-b20d-4b4c-be6f-94f032c30cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EntityHandler\Entity\Mesh\include">
+      <UniqueIdentifier>{1e48e7e6-34a6-4e6c-9eb1-0bbd7805f1e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\DataFileHandler">
+      <UniqueIdentifier>{311ca564-d67e-4731-b8ef-c387346dd4fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\DataFileHandler\include">
+      <UniqueIdentifier>{f293521f-7b84-4bce-8fd5-b2ec17ef3189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderHandler\Shader">
+      <UniqueIdentifier>{b5ed289e-b741-4c9c-a1b2-76cefa4a368e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderHandler\Shader\include">
+      <UniqueIdentifier>{7b048891-8f17-4c86-aa2e-6b2182ae0c24}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1102,7 +1126,7 @@
       <Filter>ExternalAPIs\include\GLM\simd</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Mesh\include</Filter>
+      <Filter>EntityHandler\Entity\Mesh\include</Filter>
     </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Debug\include</Filter>
@@ -1117,7 +1141,7 @@
       <Filter>ShaderHandler\include</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Entity\include</Filter>
+      <Filter>EntityHandler\Entity\include</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera\include</Filter>
@@ -1128,8 +1152,14 @@
     <ClInclude Include="Editor.h">
       <Filter>Editor\include</Filter>
     </ClInclude>
-    <ClInclude Include="EntityFileHandler.h">
-      <Filter>Editor\include</Filter>
+    <ClInclude Include="EntityHandler.h">
+      <Filter>EntityHandler\include</Filter>
+    </ClInclude>
+    <ClInclude Include="DataFileHandler.h">
+      <Filter>Editor\DataFileHandler\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>ShaderHandler\Shader\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

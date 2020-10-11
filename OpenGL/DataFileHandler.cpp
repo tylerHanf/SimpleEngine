@@ -1,7 +1,13 @@
-#include "EntityFileHandler.h"
-#include "Debug.h"
+#include "DataFileHandler.h"
 
-void EntityFileHandler::LoadEntities(std::vector<Entity*> &entities) {
+DataFileHandler::DataFileHandler(EntityHandler* ents, ShaderHandler* shads) {
+    entities = ents;
+    shaders = shads;
+
+    LoadEntities();
+}
+
+void DataFileHandler::LoadEntities(void) {
     char data[100];
     std::string objFile;
     std::ifstream reader;
@@ -18,7 +24,6 @@ void EntityFileHandler::LoadEntities(std::vector<Entity*> &entities) {
 		    break;
 		objFile.push_back(data[i]);
 	    }
-	    
 	    objSize = objFile.size()+1;
 	    objFile.insert(0, obj_dir);
 	    objFile.append(obj_ext);
@@ -26,9 +31,7 @@ void EntityFileHandler::LoadEntities(std::vector<Entity*> &entities) {
 	    x = (float)(data[objSize]-'0');
 	    y = (float)(data[objSize+2]-'0');
 	    z = (float)(data[objSize+4]-'0');
-	    Entity* newEntity = new Entity(objFile.c_str(), glm::vec3(x, y, z));
-	    entities.push_back(newEntity);
+	    entities->AddEntity(objFile.c_str(), glm::vec3(x,y,z));
 	}
     }
 }
-

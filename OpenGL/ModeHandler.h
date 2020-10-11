@@ -2,13 +2,15 @@
 
 enum Mode {
     EDITOR,
-    DEBUG
+    DEBUG,
+    PROD
 };
 
 class ModeHandler {
  public:
-    ModeHandler(const char** initMode);
-    void SwitchMode(void);
+    ModeHandler(const char** initMode, int lenArgv);
+    Mode CurMode(void);
+    void SwitchMode(Mode newMode);
     
  private:
     Mode curMode = EDITOR;

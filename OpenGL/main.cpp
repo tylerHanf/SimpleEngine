@@ -5,9 +5,11 @@
 #include "GL_Context.h"
 #include "Renderer.h"
 #include "Camera.h"
+#include "EntityHandler.h"
 #include "ShaderHandler.h"
 #include "ModeHandler.h"
-#include "EntityFileHandler.h"
+#include "DataFileHandler.h"
+#include "Editor.h"
 
 const std::string WINDOW_NAME = std::string("Simple Engine");
 const char* VERT_SHADER_PATH = "vertShader.glsl";
@@ -29,7 +31,8 @@ void resizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void GetKeyInput(GLFWwindow* window, Camera* camera) {
+void GetKeyInput(GLFWwindow* window, Camera* camera, ModeHandler* mode,
+		 GL_Context* context) {
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
        camera->MoveForward();
     }
@@ -44,6 +47,11 @@ void GetKeyInput(GLFWwindow* window, Camera* camera) {
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 	camera->MoveLeft();
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
+	mode->SwitchMode(Mode(EDITOR));
+	context->SetCursor();
     }
 }
 
@@ -63,37 +71,44 @@ Consider implementing scripting
     capabilities
 */
 int main(int argc, char** argv) {
-    std::vector<Entity*> entities;
-    EntityFileHandler filehandler;
+    EntityHandler e_handler;
+    ShaderHandler s_handler;
+    DataFileHandler filehandler = DataFileHandler(&e_handler, &s_handler); 
     
-    filehandler.LoadEntities(entities);
-    
-    //ModeHandler mode = ModeHandler((const char**) argv);
+    ModeHandler mode = ModeHandler((const char**) argv, argc);
     InitProgram();
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, -8.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
-    ShaderHandler baseHandler(VERT_SHADER_PATH, FRAG_SHADER_PATH);
-    ShaderHandler lightHandler(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
-    std::vector<ShaderHandler*> shaders;
-    shaders.push_back(&baseHandler);
-    shaders.push_back(&lightHandler);
-    Renderer renderer = Renderer(&curContext, shaders);
+    s_handler.AddShader(VERT_SHADER_PATH, FRAG_SHADER_PATH);
+    s_handler.AddShader(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
+    
+    Renderer renderer = Renderer(&curContext, &s_handler, &mode);
+    Editor editor = Editor(&renderer);
    
-    renderer.LoadData(entities);
+    renderer.LoadData(&e_handler);
     curContext.ResizeCallback(&resizeCallback);
-    curContext.SetInputMode();
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
+    s_handler.Use(1);
+    //mode.SwitchMode(Mode(DEBUG));
 
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
-	renderer.Display(entities, &camera);
-	curContext.Swap();
 	curContext.Poll();
-	GetKeyInput(curContext.getWindow(), &camera);
-	GetMouseInput(curContext.getWindow(), &camera);
+	if (mode.CurMode() == Mode(DEBUG)) {
+	    renderer.DisplayDebug(&e_handler, &camera);
+	    GetKeyInput(curContext.getWindow(), &camera, &mode, &curContext);
+	    GetMouseInput(curContext.getWindow(), &camera);
+	}
+		
+	else if (mode.CurMode() == Mode(EDITOR)) {
+	    renderer.DisplayEditor(&e_handler, editor.GetCamera());
+	    editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
+	}
+	curContext.Swap();
     }
 
     curContext.Terminate();
+
     return 0;
 }

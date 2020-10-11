@@ -112,8 +112,12 @@ void GL_Context::SetKeyCallback(GLFWkeyfun function) {
     glfwSetKeyCallback(window, function);
 }
 
-void GL_Context::SetInputMode(void) {
+void GL_Context::SetNoCursor(void) {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void GL_Context::SetCursor(void) {
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
 /*

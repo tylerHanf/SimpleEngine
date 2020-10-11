@@ -3,10 +3,11 @@
 #include <vector>
 #include <stack>
 
-#include "Entity.h"
 #include "GL_Context.h"
 #include "Camera.h"
 #include "ShaderHandler.h"
+#include "EntityHandler.h"
+#include "ModeHandler.h"
 
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
@@ -16,14 +17,15 @@ Handles all rendering operations
 */
 class Renderer {
  public:
-    Renderer(GL_Context* contextObj, std::vector<ShaderHandler*> &shaders);
-    void Display(std::vector<Entity*> entities, Camera* camera);
-    void LoadData(std::vector<Entity*> entities);
+    Renderer(GL_Context* contextObj, ShaderHandler* shaders, ModeHandler* modeH);
+    void DisplayDebug(EntityHandler* entities, Camera* camera);
+    void DisplayEditor(EntityHandler* entities, Camera* camera);
+    void LoadData(EntityHandler* e_handler);
     
  private:
-    //GLuint renderingProgram;
     std::vector<GLuint> vao, vbo;
-    std::vector<ShaderHandler*> &renderingPrograms;
+    ShaderHandler* shaderHandler;
+    ModeHandler* mode; 
     GLuint mvLoc, projLoc;
     glm::mat4 pMat, mMat, vMat;
     std::stack<glm::mat4> mvStack;
