@@ -173,15 +173,15 @@ void Shader::createShaderProgram(const char *vp, const char *fp) {
 }
 
 void Shader::setupUniforms(void) {
-    int count = 0;
-    const GLsizei size = 32;
+    GLint count = 0;
+    const GLsizei size = 1024;
     GLchar name[size];
-    GLenum *type = 0;
+    GLenum type;
     GLint act_size = 0;
     GLuint uLoc = 0;
     glGetProgramiv(handler, GL_ACTIVE_UNIFORMS, &count);
-    for (int i=0; i<count; i++) {
-	glGetActiveUniform(handler, (GLuint)i, size, NULL, &act_size, type, name);
+    for (GLint i=0; i<count; i++) {
+        glGetActiveUniform(handler, i, size, NULL, &act_size, &type, name);
 	uLoc = glGetUniformLocation(handler, name);
 	if (!std::strcmp(name, "model")) {
 	    basic.model = uLoc;

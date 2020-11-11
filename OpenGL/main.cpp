@@ -1,4 +1,6 @@
 #include <vector>
+#include <chrono>
+#include <thread>
 #include "Debug.h"
 
 #include "Entity.h"
@@ -33,6 +35,7 @@ void resizeCallback(GLFWwindow* window, int width, int height) {
 
 void GetKeyInput(GLFWwindow* window, Camera* camera, ModeHandler* mode,
 		 GL_Context* context) {
+    static double timePassed = 0;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
        camera->MoveForward();
     }
@@ -52,6 +55,7 @@ void GetKeyInput(GLFWwindow* window, Camera* camera, ModeHandler* mode,
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
 	mode->SwitchMode(Mode(EDITOR));
 	context->SetCursor();
+	std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 }
 
@@ -69,6 +73,8 @@ Fix screen size changing
 Add debugging input features
 Consider implementing scripting
     capabilities
+
+Make a time class to handle delays and timing (not using GLFW timing)
 */
 int main(int argc, char** argv) {
     EntityHandler e_handler;
@@ -79,19 +85,20 @@ int main(int argc, char** argv) {
     InitProgram();
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, -8.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
+    
     s_handler.AddShader(VERT_SHADER_PATH, FRAG_SHADER_PATH);
     s_handler.AddShader(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
-    
     Renderer renderer = Renderer(&curContext, &s_handler, &mode);
     Editor editor = Editor(&renderer);
    
     renderer.LoadData(&e_handler);
     curContext.ResizeCallback(&resizeCallback);
+    glfwSetInputMode(curContext.getWindow(), GLFW_STICKY_KEYS, GLFW_TRUE);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
     s_handler.Use(1);
     //mode.SwitchMode(Mode(DEBUG));
-
+    
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
 	curContext.Poll();
@@ -107,8 +114,7 @@ int main(int argc, char** argv) {
 	}
 	curContext.Swap();
     }
-
+    
     curContext.Terminate();
-
     return 0;
 }

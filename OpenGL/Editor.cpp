@@ -1,4 +1,6 @@
 #include "Editor.h"
+#include <chrono>
+#include <thread>
 
 Editor::Editor(Renderer* curRenderer) :
     camera(glm::vec3(0.0f, 0.0f, 0.0f))
@@ -11,6 +13,7 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
 	curMode->SwitchMode(Mode(DEBUG));
 	context->SetNoCursor();
+	std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
     
 }
