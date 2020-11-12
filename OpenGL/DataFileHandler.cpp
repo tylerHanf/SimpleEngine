@@ -32,6 +32,7 @@ void DataFileHandler::LoadEntities(void) {
 	    y = (float)(data[objSize+2]-'0');
 	    z = (float)(data[objSize+4]-'0');
 	    entities->AddEntity(objFile.c_str(), glm::vec3(x,y,z));
+	    objFile = "";
 	}
     }
 }

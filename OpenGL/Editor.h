@@ -10,7 +10,8 @@ class Editor {
  public:
     Editor(Renderer* curRenderer);
     void GetKeyInput(GLFWwindow* window, ModeHandler* curMode, GL_Context* context);
-    void GetMouseInput(GLFWwindow* window);
+    void GetMouseMove(GLFWwindow* window);
+    void GetMouseSelect(GLFWwindow* window);
     Camera* GetCamera(void);
 
  private:

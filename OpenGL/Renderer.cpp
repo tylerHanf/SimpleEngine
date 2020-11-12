@@ -113,11 +113,11 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera) {
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDrawArrays(GL_TRIANGLES, 0, entities->GetEntity(i)->numMeshVertices()/3);
 
-	mvStack.pop(); mvStack.pop();
+	mvStack.pop();
     }
+    mvStack.pop();
 }

@@ -26,7 +26,7 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
   }
 
   if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-    GetMouseInput(window);
+    GetMouseMove(window);
   }
   
   if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
@@ -37,10 +37,13 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
   }
 }
 
-void Editor::GetMouseInput(GLFWwindow* window) {
+void Editor::GetMouseMove(GLFWwindow* window) {
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
     camera.LookAround(xpos, ypos);
+}
+
+void Editor::GetMouseSelect(GLFWwindow* window) {
 }
 
 Camera* Editor::GetCamera(void) {

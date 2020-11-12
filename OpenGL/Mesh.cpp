@@ -10,6 +10,7 @@ Contains Mesh data (currently just vertices and normals)
 */
 Mesh::Mesh(const std::string& filename) {
     Assimp::Importer importer;
+    Debug::Instance().PrintError(filename);
     const aiScene* scene = importer.ReadFile(filename, aiProcess_Triangulate);
 
     if (!scene) {

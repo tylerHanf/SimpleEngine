@@ -88,7 +88,8 @@ int main(int argc, char** argv) {
     s_handler.AddShader(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
     Renderer renderer = Renderer(&curContext, &s_handler, &mode);
     Editor editor = Editor(&renderer);
-   
+
+
     renderer.LoadData(&e_handler);
     curContext.ResizeCallback(&resizeCallback);
     glfwSetInputMode(curContext.getWindow(), GLFW_STICKY_KEYS, GLFW_TRUE);
@@ -96,12 +97,15 @@ int main(int argc, char** argv) {
     glEnable(GL_DEPTH_TEST);
     s_handler.Use(1);
     //mode.SwitchMode(Mode(DEBUG));
-    
+
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
 	curContext.Poll();
+
 	if (mode.CurMode() == Mode(DEBUG)) {
+
 	    renderer.DisplayDebug(&e_handler, &camera);
+
 	    GetKeyInput(curContext.getWindow(), &camera, &mode, &curContext);
 	    GetMouseInput(curContext.getWindow(), &camera);
 	    //Debug::Instance().PrintError("Debug Loop");
