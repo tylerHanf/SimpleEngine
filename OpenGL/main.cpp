@@ -1,6 +1,4 @@
 #include <vector>
-#include <chrono>
-#include <thread>
 #include "Debug.h"
 
 #include "Entity.h"
@@ -25,8 +23,8 @@ Handles program initialization,
 not context init
 */
 void InitProgram(void) {
-    width = 800;
-    height = 800;
+    width = 1000;
+    height = 1000;
 }
 
 void resizeCallback(GLFWwindow* window, int width, int height) {
@@ -35,7 +33,6 @@ void resizeCallback(GLFWwindow* window, int width, int height) {
 
 void GetKeyInput(GLFWwindow* window, Camera* camera, ModeHandler* mode,
 		 GL_Context* context) {
-    static double timePassed = 0;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
        camera->MoveForward();
     }
@@ -53,9 +50,10 @@ void GetKeyInput(GLFWwindow* window, Camera* camera, ModeHandler* mode,
     }
 
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-	mode->SwitchMode(Mode(EDITOR));
+      if (mode->CanSwitch(context->GetTime())) {
+	mode->SwitchMode(Mode(EDITOR), context->GetTime());
 	context->SetCursor();
-	std::this_thread::sleep_for(std::chrono::milliseconds(30));
+      }
     }
 }
 
@@ -106,11 +104,13 @@ int main(int argc, char** argv) {
 	    renderer.DisplayDebug(&e_handler, &camera);
 	    GetKeyInput(curContext.getWindow(), &camera, &mode, &curContext);
 	    GetMouseInput(curContext.getWindow(), &camera);
+	    //Debug::Instance().PrintError("Debug Loop");
 	}
 		
 	else if (mode.CurMode() == Mode(EDITOR)) {
 	    renderer.DisplayEditor(&e_handler, editor.GetCamera());
 	    editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
+	    //Debug::Instance().PrintError("Editor Loop");
 	}
 	curContext.Swap();
     }

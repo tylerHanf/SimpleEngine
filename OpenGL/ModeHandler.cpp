@@ -13,6 +13,14 @@ Mode ModeHandler::CurMode() {
     return curMode;
 }
 
-void ModeHandler::SwitchMode(Mode newMode) {
+void ModeHandler::SwitchMode(Mode newMode, double currentTime) {
+    holdTime = currentTime;
     curMode = newMode;
+}
+
+//HOLD TIME IS 0.2 SEC!!!
+bool ModeHandler::CanSwitch(double currentTime) {
+  if (currentTime - holdTime < 0.2) return false;
+  holdTime = 0;
+  return true;
 }

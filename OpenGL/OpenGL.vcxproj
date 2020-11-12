@@ -172,6 +172,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\assimp\include\assimp\ai_assert.h" />
@@ -511,6 +512,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderHandler.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assimp\include\assimp\.editorconfig" />
