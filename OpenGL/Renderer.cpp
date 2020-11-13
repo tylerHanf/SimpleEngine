@@ -78,11 +78,12 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
 	glDepthFunc(GL_LEQUAL);
 	glDrawArrays(GL_TRIANGLES, 0, entities->GetEntity(i)->numMeshVertices()/3);
 
-	mvStack.pop(); mvStack.pop();
+	mvStack.pop();
     }
+    mvStack.pop();
 }
 
-void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera) {
+void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext* gContext) {
     context->ClearDepthBuffer();
     context->ClearColorBuffer();
     context->UseProgram(shaderHandler->GetCurProg());
@@ -120,4 +121,8 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera) {
 	mvStack.pop();
     }
     mvStack.pop();
+
+    //shaderHandler->Use(0);
+    //context->UseProgram(shaderHandler->GetCurProg());
+    gContext->RenderGui();
 }

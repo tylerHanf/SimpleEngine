@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
     s_handler.AddShader(VERT_SHADER_PATH, FRAG_SHADER_PATH);
     s_handler.AddShader(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
     Renderer renderer = Renderer(&curContext, &s_handler, &mode);
-    Editor editor = Editor(&renderer);
+    Editor editor = Editor(&renderer, curContext.getWindow());
 
 
     renderer.LoadData(&e_handler);
@@ -112,7 +112,8 @@ int main(int argc, char** argv) {
 	}
 		
 	else if (mode.CurMode() == Mode(EDITOR)) {
-	    renderer.DisplayEditor(&e_handler, editor.GetCamera());
+	  renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
+	    
 	    editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
 	    //Debug::Instance().PrintError("Editor Loop");
 	}

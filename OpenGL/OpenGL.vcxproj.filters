@@ -41,8 +41,26 @@
     <ClCompile Include="Shader.cpp">
       <Filter>ShaderHandler\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Utils\Timer</Filter>
+    <ClCompile Include="..\ExternalAPIs\include\ImGUI\imgui.cpp">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ExternalAPIs\include\ImGUI\imgui_demo.cpp">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ExternalAPIs\include\ImGUI\imgui_draw.cpp">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ExternalAPIs\include\ImGUI\imgui_impl_glfw.cpp">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ExternalAPIs\include\ImGUI\imgui_widgets.cpp">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ExternalAPIs\include\ImGUI\imgui_impl_opengl3.cpp">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiContext.cpp">
+      <Filter>Editor\GuiContext</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,11 +172,14 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{663184c0-edb7-4bc6-8b37-edd246432dd4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utils\Timer">
-      <UniqueIdentifier>{3d579cf4-76e2-417b-bb70-8541329fccf1}</UniqueIdentifier>
+    <Filter Include="ExternalAPIs\include\ImGui">
+      <UniqueIdentifier>{ad29a8bf-8700-48d3-a2ae-59ce6b52160a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Utils\Timer\include">
-      <UniqueIdentifier>{18811d4a-eec2-4cbd-b86f-6e4b39a8dde3}</UniqueIdentifier>
+    <Filter Include="Editor\GuiContext">
+      <UniqueIdentifier>{a046a81f-fdd8-4cb9-bb85-f163f514d439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\GuiContext\include">
+      <UniqueIdentifier>{e2f8113d-f782-4ba1-8948-bb3349b45a25}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1173,8 +1194,32 @@
     <ClInclude Include="Shader.h">
       <Filter>ShaderHandler\Shader\include</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Utils\Timer\include</Filter>
+    <ClInclude Include="..\ExternalAPIs\include\ImGUI\imconfig.h">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternalAPIs\include\ImGUI\imgui.h">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternalAPIs\include\ImGUI\imgui_impl_glfw.h">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternalAPIs\include\ImGUI\imgui_internal.h">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternalAPIs\include\ImGUI\imstb_rectpack.h">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternalAPIs\include\ImGUI\imstb_textedit.h">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternalAPIs\include\ImGUI\imstb_truetype.h">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternalAPIs\include\ImGUI\imgui_impl_opengl3.h">
+      <Filter>ExternalAPIs\include\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiContext.h">
+      <Filter>Editor\GuiContext\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

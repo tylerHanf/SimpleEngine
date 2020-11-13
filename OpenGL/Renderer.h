@@ -4,6 +4,7 @@
 #include <stack>
 
 #include "GL_Context.h"
+#include "GuiContext.h"
 #include "Camera.h"
 #include "ShaderHandler.h"
 #include "EntityHandler.h"
@@ -19,7 +20,7 @@ class Renderer {
  public:
     Renderer(GL_Context* contextObj, ShaderHandler* shaders, ModeHandler* modeH);
     void DisplayDebug(EntityHandler* entities, Camera* camera);
-    void DisplayEditor(EntityHandler* entities, Camera* camera);
+    void DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext* gContext);
     void LoadData(EntityHandler* e_handler);
     
  private:

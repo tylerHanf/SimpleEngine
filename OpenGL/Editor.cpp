@@ -1,10 +1,12 @@
 #include "Editor.h"
 #include "Debug.h"
 
-Editor::Editor(Renderer* curRenderer) :
-    camera(glm::vec3(0.0f, 0.0f, 0.0f))
+Editor::Editor(Renderer* curRenderer, GLFWwindow* window) :
+  camera(glm::vec3(0.0f, 0.0f, 0.0f)),
+  guiContext(window)
 {
-    renderer = curRenderer;
+    renderer = curRenderer;  
+  
 }
 
 void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
@@ -35,6 +37,11 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
       context->SetNoCursor();
     }
   }
+
+  int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+  if (state == GLFW_PRESS && not guiContext.mouseInUse()) {
+    Debug::Instance().PrintError("Left clicked");
+  }
 }
 
 void Editor::GetMouseMove(GLFWwindow* window) {
@@ -44,8 +51,13 @@ void Editor::GetMouseMove(GLFWwindow* window) {
 }
 
 void Editor::GetMouseSelect(GLFWwindow* window) {
+
 }
 
 Camera* Editor::GetCamera(void) {
     return &camera;
+}
+
+GuiContext* Editor::GetGuiContext(void) {
+  return &guiContext;
 }
