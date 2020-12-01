@@ -1,16 +1,21 @@
 #include "Editor.h"
 #include "Debug.h"
 
-Editor::Editor(Renderer* curRenderer, GLFWwindow* window) :
+/*
+TODO: FIX BOX COLLIDER PARAMS
+*/
+Editor::Editor(Renderer* curRenderer, GLFWwindow* window, EntityHandler* curEntities) :
   camera(glm::vec3(0.0f, 0.0f, 0.0f)),
   guiContext(window)
 {
-    renderer = curRenderer;  
-  
+    renderer = curRenderer;
+    entities = curEntities;
+    pointer = MouseRay();
 }
 
 void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
 			 GL_Context* context) {
+  int state;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     camera.MoveForward();
   }
@@ -26,8 +31,9 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
     camera.MoveLeft();
   }
-
-  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+  
+  state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE);
+  if (state == GLFW_PRESS) {
     GetMouseMove(window);
   }
   
@@ -38,9 +44,9 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
     }
   }
 
-  int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+  state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
   if (state == GLFW_PRESS && not guiContext.mouseInUse()) {
-    Debug::Instance().PrintError("Left clicked");
+    GetMouseSelect(window);
   }
 }
 
@@ -51,7 +57,28 @@ void Editor::GetMouseMove(GLFWwindow* window) {
 }
 
 void Editor::GetMouseSelect(GLFWwindow* window) {
+  double xpos, ypos;
+  glfwGetCursorPos(window, &xpos, &ypos);
+  glm::mat4 pMat = renderer->getPmat();
+  glm::mat4 vMat = renderer->getVmat();
 
+  /*
+  for (unsigned int i=0; i<entities->NumEntities(); i++) {
+    Entity* curEnt = entities->GetEntity(i);
+    if (curEnt->getBoxCollider()->isPicked(xpos, ypos, 1000, 1000, pMat, vMat)) {
+      glm::vec3 pos = curEnt->getLocation();
+      
+      Debug::Instance().PrintError(pos.x);
+      Debug::Instance().PrintError(pos.y);
+      Debug::Instance().PrintError(pos.z);
+      
+    }
+  }
+  */
+  Entity* picked = pointer.pointingAt();
+  if (picked != NULL) {
+    Debug::Instance().PrintError("picked");
+  }
 }
 
 Camera* Editor::GetCamera(void) {
@@ -61,3 +88,5 @@ Camera* Editor::GetCamera(void) {
 GuiContext* Editor::GetGuiContext(void) {
   return &guiContext;
 }
+
+

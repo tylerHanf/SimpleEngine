@@ -22,7 +22,6 @@ void Renderer::LoadData(EntityHandler* entities) {
     int numVBOs = numEnts;
     Entity* curEnt = NULL;
 
-    
     vao.resize(numVAOs);
     vbo.resize(numVBOs);
     
@@ -39,12 +38,25 @@ void Renderer::LoadData(EntityHandler* entities) {
     }
 }
 
+GLuint Renderer::getVBOIdx(int idx) {
+  return vbo[idx];
+}
+
+glm::mat4 Renderer::getPmat(void) {
+  return pMat;
+}
+
+glm::mat4 Renderer::getVmat(void) {
+  return vMat;
+}
+
 /*
 Main display function
 */
 void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
     context->ClearDepthBuffer();
     context->ClearColorBuffer();
+    shaderHandler->Use(0);
     context->UseProgram(shaderHandler->GetCurProg());
     
     context->GetFrameBufferSize(&width, &height);
@@ -67,7 +79,7 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
     for (int i=0; i<numEnts; i++) {
 	mvStack.push(mvStack.top());
 	shaderHandler->SetMat4Uniform(Uniform(MODEL), mvStack.top());
-
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
@@ -86,6 +98,7 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
 void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext* gContext) {
     context->ClearDepthBuffer();
     context->ClearColorBuffer();
+    shaderHandler->Use(1);
     context->UseProgram(shaderHandler->GetCurProg());
     
     context->GetFrameBufferSize(&width, &height);
@@ -102,13 +115,14 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
     mMat = glm::translate(glm::mat4(1.0f), glm::vec3(8.0f, 0.0f, 1.0f));
+
     mvStack.push(mMat);
 
     int numEnts = entities->NumEntities();
     for (int i=0; i<numEnts; i++) {
-	mvStack.push(mvStack.top());
+        mvStack.push(mvStack.top());
 	shaderHandler->SetMat4Uniform(Uniform(MODEL), mvStack.top());
-
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
@@ -122,7 +136,47 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     }
     mvStack.pop();
 
-    //shaderHandler->Use(0);
-    //context->UseProgram(shaderHandler->GetCurProg());
+    drawCollider(entities->GetEntity(0));
+    
     gContext->RenderGui();
 }
+
+void Renderer::drawCollider(Entity* entity) {
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glLineWidth(2);
+
+  /*glm::vec3 max = entity->getMax();
+  glm::vec3 min = entity->getMin();
+  
+  glm::vec3 size = glm::vec3((max.x-min.x)/2, (max.y-min.y)/2, (max.z-min.z)/2);
+  glm::vec3 center = glm::vec3((min.x+max.x)/2, (min.y+max.y)/2, (min.z+max.z)/2);
+  glm::mat4 transform = glm::translate(glm::mat4(1), center) *
+    glm::scale(glm::mat4(1), size);
+  */
+  
+  shaderHandler->Use(2);
+  context->UseProgram(shaderHandler->GetCurProg());
+  
+  shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
+  shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
+  shaderHandler->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(0.9f, 0.8f, 0.9f));
+  shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
+  shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
+    
+  mMat = glm::translate(glm::mat4(1.0f), glm::vec3(8.0f, 0.0f, 1.0f));
+  mMat *= entity->getBoxCollider()->getTransform();
+  shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
+  glDrawArrays(GL_TRIANGLES, 0, entity->numMeshVertices()/3);
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+  
+

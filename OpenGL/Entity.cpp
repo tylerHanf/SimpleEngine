@@ -4,6 +4,7 @@
 Entity::Entity(const char* filename, glm::vec3 locationObj) {
      mesh = new Mesh(filename);
      location = locationObj;
+     collider = BoxCollider(mesh->getMin(), mesh->getMax());
 }
 
 Entity::~Entity(void) {
@@ -16,6 +17,18 @@ Mesh* Entity::getMesh(void) {
 
 glm::vec3 Entity::getLocation(void) {
     return location;
+}
+
+glm::vec3 Entity::getMax(void) {
+  return mesh->getMax();
+}
+
+glm::vec3 Entity::getMin(void) {
+  return mesh->getMin();
+}
+
+BoxCollider* Entity::getBoxCollider(void) {
+  return &collider;
 }
 
 //Bad implementation if entity has multiple meshes

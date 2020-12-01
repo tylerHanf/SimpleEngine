@@ -22,6 +22,9 @@ class Renderer {
     void DisplayDebug(EntityHandler* entities, Camera* camera);
     void DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext* gContext);
     void LoadData(EntityHandler* e_handler);
+    GLuint getVBOIdx(int idx);
+    glm::mat4 getPmat(void);
+    glm::mat4 getVmat(void);
     
  private:
     std::vector<GLuint> vao, vbo;
@@ -33,4 +36,6 @@ class Renderer {
     float aspect;
     int width, height;
     GL_Context* context;
+
+    void drawCollider(Entity* entity);
 };

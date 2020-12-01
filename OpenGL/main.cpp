@@ -16,6 +16,8 @@ const char* VERT_SHADER_PATH = "vertShader.glsl";
 const char* FRAG_SHADER_PATH = "fragShader.glsl";
 const char* VERT_LIGHT_SHADER_PATH = "basicLightVert.glsl";
 const char* FRAG_LIGHT_SHADER_PATH = "basicLightFrag.glsl";
+const char* VERT_COLLIDER_SHADER_PATH = "ColliderVert.glsl";
+const char* FRAG_COLLIDER_SHADER_PATH = "ColliderFrag.glsl";
 int width, height;
 
 /*
@@ -86,16 +88,16 @@ int main(int argc, char** argv) {
     
     s_handler.AddShader(VERT_SHADER_PATH, FRAG_SHADER_PATH);
     s_handler.AddShader(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
+    s_handler.AddShader(VERT_COLLIDER_SHADER_PATH, FRAG_COLLIDER_SHADER_PATH);
     Renderer renderer = Renderer(&curContext, &s_handler, &mode);
-    Editor editor = Editor(&renderer, curContext.getWindow());
-
+    Editor editor = Editor(&renderer, curContext.getWindow(), &e_handler);
 
     renderer.LoadData(&e_handler);
     curContext.ResizeCallback(&resizeCallback);
     glfwSetInputMode(curContext.getWindow(), GLFW_STICKY_KEYS, GLFW_TRUE);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
-    s_handler.Use(1);
+    s_handler.Use(0);
     //mode.SwitchMode(Mode(DEBUG));
 
     while(!curContext.ExitWindow()) {
@@ -103,19 +105,16 @@ int main(int argc, char** argv) {
 	curContext.Poll();
 
 	if (mode.CurMode() == Mode(DEBUG)) {
-
 	    renderer.DisplayDebug(&e_handler, &camera);
 
 	    GetKeyInput(curContext.getWindow(), &camera, &mode, &curContext);
 	    GetMouseInput(curContext.getWindow(), &camera);
-	    //Debug::Instance().PrintError("Debug Loop");
 	}
 		
 	else if (mode.CurMode() == Mode(EDITOR)) {
-	  renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
-	    
-	    editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
-	    //Debug::Instance().PrintError("Editor Loop");
+	  renderer.DisplayEditor(&e_handler, editor.GetCamera(),
+				 editor.GetGuiContext());
+	  editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
 	}
 	curContext.Swap();
     }

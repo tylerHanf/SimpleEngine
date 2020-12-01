@@ -1,4 +1,5 @@
 #pragma once
+#include "Debug.h"
 #include <vector>
 #include <string>
 #include <GLM/vec3.hpp>
@@ -14,7 +15,12 @@ class Mesh {
     Mesh(const std::string& fileName);
     const float* getVertices(void);
     int getNumVertices(void);
+    glm::vec3 getMax(void);
+    glm::vec3 getMin(void);
     
  private:
     std::vector<float> Vertices;
+    glm::vec3 min = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 max = glm::vec3(0.0f, 0.0f, 0.0f);
+    float size = 0;
 };
