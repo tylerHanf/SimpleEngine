@@ -62,6 +62,12 @@
     <ClCompile Include="GuiContext.cpp">
       <Filter>Editor\GuiContext</Filter>
     </ClCompile>
+    <ClCompile Include="BoxCollider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseRay.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExternalAPIs">
@@ -180,6 +186,12 @@
     </Filter>
     <Filter Include="Editor\GuiContext\include">
       <UniqueIdentifier>{e2f8113d-f782-4ba1-8948-bb3349b45a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{a22594c9-a2e0-44c4-b06a-b591713fefc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\include">
+      <UniqueIdentifier>{75614f12-bec6-483c-af47-aaed6af2a6d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1220,6 +1232,12 @@
     </ClInclude>
     <ClInclude Include="GuiContext.h">
       <Filter>Editor\GuiContext\include</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider.h">
+      <Filter>Physics\include</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseRay.h">
+      <Filter>Physics\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
