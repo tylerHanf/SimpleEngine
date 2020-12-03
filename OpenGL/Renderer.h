@@ -25,6 +25,7 @@ class Renderer {
     GLuint getVBOIdx(int idx);
     glm::mat4 getPmat(void);
     glm::mat4 getVmat(void);
+    glm::mat4 getMmat(void);
     
  private:
     std::vector<GLuint> vao, vbo;

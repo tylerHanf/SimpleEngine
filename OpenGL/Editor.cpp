@@ -5,7 +5,7 @@
 TODO: FIX BOX COLLIDER PARAMS
 */
 Editor::Editor(Renderer* curRenderer, GLFWwindow* window, EntityHandler* curEntities) :
-  camera(glm::vec3(0.0f, 0.0f, 0.0f)),
+  camera(glm::vec3(0.0f, 0.0f, 0.0f), 2.0f),
   guiContext(window)
 {
     renderer = curRenderer;
@@ -30,6 +30,14 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
 
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
     camera.MoveLeft();
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+    camera.setSpeed(0.2);
+  }
+  
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
+    camera.setSpeed(2.0);
   }
   
   state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE);
@@ -62,6 +70,9 @@ void Editor::GetMouseSelect(GLFWwindow* window) {
   glm::mat4 pMat = renderer->getPmat();
   glm::mat4 vMat = renderer->getVmat();
 
+  Debug::Instance().PrintError("updating");
+  pointer.Update(xpos, ypos, 1000, 1000, pMat, vMat);
+
   /*
   for (unsigned int i=0; i<entities->NumEntities(); i++) {
     Entity* curEnt = entities->GetEntity(i);
@@ -74,11 +85,16 @@ void Editor::GetMouseSelect(GLFWwindow* window) {
       
     }
   }
-  */
   Entity* picked = pointer.pointingAt();
+  
   if (picked != NULL) {
     Debug::Instance().PrintError("picked");
   }
+  */
+}
+
+MouseRay* Editor::GetMouseRay(void) {
+  return &pointer;
 }
 
 Camera* Editor::GetCamera(void) {

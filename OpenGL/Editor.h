@@ -18,6 +18,7 @@ class Editor {
     Camera* GetCamera(void);
     void drawBoundingBox(int entIdx, EntityHandler* ents, GL_Context* context,
 		       ShaderHandler* s_handler);
+    MouseRay* GetMouseRay(void);
 
  private:
     Renderer* renderer;

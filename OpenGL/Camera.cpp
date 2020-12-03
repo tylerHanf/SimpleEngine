@@ -1,8 +1,8 @@
 #include "Camera.h"
 
 Camera::Camera(glm::vec3 inPosition) {
-    position = glm::vec3(0.0f, 0.0f, 3.0f);
-    front = glm::vec3(0.0f, 0.0f, -1.0f);
+    position = glm::vec3(0.0f, 0.0f, 0.0f);
+    front = glm::vec3(0.0f, 0.0f, 1.0f);
     up = glm::vec3(0.0f, 1.0f, 0.0f);
     speed = 5.0;
     xpos, ypos = 400;
@@ -10,6 +10,18 @@ Camera::Camera(glm::vec3 inPosition) {
     sensitivity = 0.1f;
     yaw = -90.0f;
     pitch = 0;
+}
+
+Camera::Camera(glm::vec3 inPosition, float inSpeed) {
+    position = glm::vec3(0.0f, 0.0f, 0.0f);
+    front = glm::vec3(0.0f, 0.0f, 1.0f);
+    up = glm::vec3(0.0f, 1.0f, 0.0f);
+    speed = inSpeed;
+    xpos, ypos = 400;
+    lastX, lastY = 400;
+    sensitivity = 0.1f;
+    yaw = -90.0f;
+    pitch = 0;  
 }
 
 void Camera::ChangeLocation(glm::vec3 newPosition) {

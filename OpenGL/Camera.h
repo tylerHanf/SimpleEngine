@@ -4,6 +4,7 @@
 class Camera {
  public:
     Camera(glm::vec3 position);
+    Camera(glm::vec3 inPosition, float inSpeed);
     void ChangeLocation(glm::vec3 newPosition);
     glm::vec3 getPosition(void);
     void MoveForward(void);

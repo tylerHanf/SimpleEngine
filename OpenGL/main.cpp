@@ -83,7 +83,7 @@ int main(int argc, char** argv) {
     
     ModeHandler mode = ModeHandler((const char**) argv, argc);
     InitProgram();
-    Camera camera = Camera(glm::vec3(0.0f, 0.0f, -8.0f));
+    Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
     
     s_handler.AddShader(VERT_SHADER_PATH, FRAG_SHADER_PATH);
@@ -97,8 +97,6 @@ int main(int argc, char** argv) {
     glfwSetInputMode(curContext.getWindow(), GLFW_STICKY_KEYS, GLFW_TRUE);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
-    s_handler.Use(0);
-    //mode.SwitchMode(Mode(DEBUG));
 
     while(!curContext.ExitWindow()) {
 	curContext.ClearColorBuffer();
@@ -114,6 +112,7 @@ int main(int argc, char** argv) {
 	else if (mode.CurMode() == Mode(EDITOR)) {
 	  renderer.DisplayEditor(&e_handler, editor.GetCamera(),
 				 editor.GetGuiContext());
+	  editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler, renderer.getMmat());
 	  editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
 	}
 	curContext.Swap();
