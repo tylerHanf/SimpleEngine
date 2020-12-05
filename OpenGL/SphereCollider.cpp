@@ -16,7 +16,6 @@ float SphereCollider::getRadius(void) {
 }
 
 bool SphereCollider::intersects(glm::vec3 rayOrigin, glm::vec3 rayDir) {
-  Debug::Instance().PrintError("Test collision");
   glm::vec3 l = center - rayOrigin;
   float s = glm::dot(l, rayDir);
   float l_square = glm::dot(l, l);

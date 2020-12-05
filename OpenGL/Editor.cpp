@@ -15,7 +15,10 @@ Editor::Editor(Renderer* curRenderer, GLFWwindow* window, EntityHandler* curEnti
 
 void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
 			 GL_Context* context) {
-  int state;
+  int state;  
+  double xpos, ypos;
+  glfwGetCursorPos(window, &xpos, &ypos);
+  
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     camera.MoveForward();
   }
@@ -42,7 +45,7 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
   
   state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE);
   if (state == GLFW_PRESS) {
-    GetMouseMove(window);
+    camera.LookAround(xpos, ypos);    
   }
   
   if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
@@ -54,27 +57,16 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
 
   state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
   if (state == GLFW_PRESS && not guiContext.mouseInUse()) {
-    GetMouseSelect(window);
-  }
-}
-
-void Editor::GetMouseMove(GLFWwindow* window) {
-    double xpos, ypos;
     glm::mat4 pMat = renderer->getPmat();
-    glm::mat4 vMat = renderer->getVmat();    
-    glfwGetCursorPos(window, &xpos, &ypos);
-    camera.LookAround(xpos, ypos);
-    pointer.Update(xpos, ypos, 1000, 1000, pMat, vMat, camera.getPosition());    
-}
-
-void Editor::GetMouseSelect(GLFWwindow* window) {
-  double xpos, ypos;
-  glfwGetCursorPos(window, &xpos, &ypos);
+    glm::mat4 vMat = renderer->getVmat();
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    pointer.Update(xpos, ypos, width, height, pMat, vMat, camera.getPosition());      
+    Entity* picked = pointer.pointingAt(entities);
   
-  Entity* picked = pointer.pointingAt(entities);
-  
-  if (picked != NULL) {
-    Debug::Instance().PrintError("picked");
+    if (picked != NULL) {
+      Debug::Instance().PrintError("picked");    
+    }
   }
 }
 

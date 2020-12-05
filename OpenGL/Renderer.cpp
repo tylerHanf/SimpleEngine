@@ -76,8 +76,7 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
     shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
     shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
-    mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    mvStack.push(mMat);
+    mvStack.push(glm::mat4(1.0));
 
     int numEnts = entities->NumEntities();
     for (int i=0; i<numEnts; i++) {
@@ -106,11 +105,11 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     context->ClearColorBuffer();
     shaderHandler->Use(1);
     context->UseProgram(shaderHandler->GetCurProg());
-    
+
     context->GetFrameBufferSize(&width, &height);
     aspect = (float)width/(float)height;
 
-    pMat = glm::perspective(1.0472f, aspect, 0.1f, 2000.0f);
+    pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
     vMat = glm::lookAt(camera->getPosition(), camera->GetLookAt(),
 		       camera->GetUp());
     
@@ -120,18 +119,15 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
     shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
-    mMat = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-
-    mvStack.push(mMat);
+    mvStack.push(glm::mat4(1.0));
 
     int numEnts = entities->NumEntities();
-    for (int i=1; i<numEnts; i++) {
+    for (int i=0; i<numEnts; i++) {
         Entity* curEntity = entities->GetEntity(i);
+
         mvStack.push(mvStack.top());
 	mvStack.top() *= glm::translate(glm::mat4(1.0f), curEntity->getLocation());
-	//glm::mat4 model = glm::translate(glm::mat4(1.0f), curEntity->getLocation());
 	shaderHandler->SetMat4Uniform(Uniform(MODEL), mvStack.top());
-	//shaderHandler->SetMat4Uniform(Uniform(MODEL), model);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
@@ -147,8 +143,6 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     mvStack.pop();
 
     drawCollider(entities->GetEntity(1), entities->GetEntity(2));
-    
-    //gContext->RenderGui();
 }
 
 void Renderer::drawCollider(Entity* entity, Entity* collider) {
@@ -165,9 +159,7 @@ void Renderer::drawCollider(Entity* entity, Entity* collider) {
   shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
   shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
-  mMat = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-  //mMat *= entity->getSphereCollider()->getTransform();
-  mMat *= glm::translate(glm::mat4(1.0f), entity->getLocation());
+  mMat = glm::translate(glm::mat4(1.0f), entity->getLocation());
 
   shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
 

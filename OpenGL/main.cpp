@@ -99,27 +99,20 @@ int main(int argc, char** argv) {
     glEnable(GL_DEPTH_TEST);
 
     while(!curContext.ExitWindow()) {
-	curContext.ClearColorBuffer();
-	curContext.Poll();
-
-	if (mode.CurMode() == Mode(DEBUG)) {
+      	curContext.Swap();
+	curContext.Poll();	  	
+        if (mode.CurMode() == Mode(DEBUG)) {
 	    renderer.DisplayDebug(&e_handler, &camera);
-
 	    GetKeyInput(curContext.getWindow(), &camera, &mode, &curContext);
 	    GetMouseInput(curContext.getWindow(), &camera);
 	}
-		
 	else if (mode.CurMode() == Mode(EDITOR)) {
-	  renderer.DisplayEditor(&e_handler, editor.GetCamera(),
-				 editor.GetGuiContext());
-	  
-	  editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
-	  //editor.GetMouseRay()->Update();
+	  renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
+ 	  editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
 	  editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler, renderer.getMmat());
 	}
-	curContext.Swap();
+
     }
-    
     curContext.Terminate();
     return 0;
 }

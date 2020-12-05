@@ -12,8 +12,6 @@ class Editor {
  public:
     Editor(Renderer* curRenderer, GLFWwindow* window, EntityHandler* entities);
     void GetKeyInput(GLFWwindow* window, ModeHandler* curMode, GL_Context* context);
-    void GetMouseMove(GLFWwindow* window);
-    void GetMouseSelect(GLFWwindow* window);
     GuiContext* GetGuiContext(void);
     Camera* GetCamera(void);
     void drawBoundingBox(int entIdx, EntityHandler* ents, GL_Context* context,

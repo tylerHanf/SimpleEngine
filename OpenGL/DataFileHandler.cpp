@@ -9,28 +9,22 @@ DataFileHandler::DataFileHandler(EntityHandler* ents, ShaderHandler* shads) {
 
 void DataFileHandler::LoadEntities(void) {
     char data[100];
+    char temp[50];
     std::string objFile;
     std::ifstream reader;
-    float x,y,z;
-    int objSize;
+    float x,y,z = 0.0; 
     reader.open(obj_ls_dir);
     if (!reader.is_open()) 
 	Debug::Instance().PrintError("Failed to open Entity file");
     else {
 	while (!reader.eof()) {
 	    reader.getline(data, 100);
-	    for (int i=0; i<sizeof(data); i++) {
-		if (data[i] == ' ')
-		    break;
-		objFile.push_back(data[i]);
-	    }
-	    objSize = objFile.size()+1;
+	    sscanf_s(data, "%s %f,%f,%f", temp, 50, &x, &y, &z);
+	    
+	    objFile = temp;
 	    objFile.insert(0, obj_dir);
 	    objFile.append(obj_ext);
-	    
-	    x = (float)(data[objSize]-'0');
-	    y = (float)(data[objSize+2]-'0');
-	    z = (float)(data[objSize+4]-'0');
+
 	    entities->AddEntity(objFile.c_str(), glm::vec3(x,y,z));
 	    objFile = "";
 	}

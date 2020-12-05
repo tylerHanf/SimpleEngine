@@ -1,6 +1,9 @@
 #pragma once
 #include <fstream>
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "EntityHandler.h"
 #include "ShaderHandler.h"
 #include "Debug.h"
