@@ -9,13 +9,12 @@ class MouseRay {
  public:
   MouseRay(void);
   void Update(float xPos, float yPos, int width, int height,
-	      glm::mat4 pMat, glm::mat4 vMat);
-  glm::vec3 getOrigin(void);
+	      glm::mat4 pMat, glm::mat4 vMat, glm::vec3 orig);
   glm::vec3 getDirection(void);
+  glm::vec3 getOrigin(void);
   Entity* pointingAt(EntityHandler* entities);
   
  private:
-  glm::vec3 outOrigin;
-  glm::vec3 outDir;
-  int max_dist = 200;
+  glm::vec3 ray;
+  glm::vec3 origin;
 };

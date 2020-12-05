@@ -4,7 +4,8 @@
 Entity::Entity(const char* filename, glm::vec3 locationObj) {
      mesh = new Mesh(filename);
      location = locationObj;
-     collider = BoxCollider(mesh->getMin(), mesh->getMax());
+     bcollider = BoxCollider(mesh->getMin(), mesh->getMax());
+     collider = SphereCollider(mesh->getMax(), location);
 }
 
 Entity::~Entity(void) {
@@ -28,6 +29,10 @@ glm::vec3 Entity::getMin(void) {
 }
 
 BoxCollider* Entity::getBoxCollider(void) {
+  return &bcollider;
+}
+
+SphereCollider* Entity::getSphereCollider(void) {
   return &collider;
 }
 

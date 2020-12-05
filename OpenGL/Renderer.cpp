@@ -76,7 +76,7 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
     shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
     shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
-    mMat = glm::translate(glm::mat4(1.0f), glm::vec3(8.0f, 0.0f, 1.0f));
+    mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     mvStack.push(mMat);
 
     int numEnts = entities->NumEntities();
@@ -120,16 +120,18 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
     shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
-    mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    mMat = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
     mvStack.push(mMat);
 
     int numEnts = entities->NumEntities();
-    for (int i=0; i<numEnts; i++) {
+    for (int i=1; i<numEnts; i++) {
         Entity* curEntity = entities->GetEntity(i);
         mvStack.push(mvStack.top());
 	mvStack.top() *= glm::translate(glm::mat4(1.0f), curEntity->getLocation());
+	//glm::mat4 model = glm::translate(glm::mat4(1.0f), curEntity->getLocation());
 	shaderHandler->SetMat4Uniform(Uniform(MODEL), mvStack.top());
+	//shaderHandler->SetMat4Uniform(Uniform(MODEL), model);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
@@ -144,12 +146,12 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     }
     mvStack.pop();
 
-    drawCollider(entities->GetEntity(1));
+    drawCollider(entities->GetEntity(1), entities->GetEntity(2));
     
     //gContext->RenderGui();
 }
 
-void Renderer::drawCollider(Entity* entity) {
+void Renderer::drawCollider(Entity* entity, Entity* collider) {
   // Draw line
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(2);
@@ -163,23 +165,25 @@ void Renderer::drawCollider(Entity* entity) {
   shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
   shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
-  mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-  mMat *= entity->getBoxCollider()->getTransform();
+  mMat = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+  //mMat *= entity->getSphereCollider()->getTransform();
   mMat *= glm::translate(glm::mat4(1.0f), entity->getLocation());
 
   shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
 
-  glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
-  glDrawArrays(GL_TRIANGLES, 0, entity->numMeshVertices()/3);
+  glDrawArrays(GL_TRIANGLES, 0, collider->numMeshVertices()/3);
 
   // Draw fill (normal)
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
+
+
   
 

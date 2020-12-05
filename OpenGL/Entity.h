@@ -2,8 +2,8 @@
 
 #include "Mesh.h"
 #include "BoxCollider.h"
+#include "SphereCollider.h"
 #include <GLM/glm.hpp>
-
 
 class Entity {
  public:
@@ -16,11 +16,13 @@ class Entity {
     glm::vec3 getMax(void);
     glm::vec3 getMin(void);
     BoxCollider* getBoxCollider(void);
+    SphereCollider* getSphereCollider(void);
 
  private:
     glm::vec3 location;
     //Assume entity only has one mesh, could
     //make vector if there is a potential for multiple
     Mesh* mesh;
-    BoxCollider collider;
+    BoxCollider bcollider;
+    SphereCollider collider;
 };

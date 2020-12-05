@@ -14,11 +14,11 @@ Camera::Camera(glm::vec3 inPosition) {
 
 Camera::Camera(glm::vec3 inPosition, float inSpeed) {
     position = glm::vec3(0.0f, 0.0f, 0.0f);
-    front = glm::vec3(0.0f, 0.0f, 1.0f);
+    front = glm::vec3(0.0f, 0.0f, -1.0f);
     up = glm::vec3(0.0f, 1.0f, 0.0f);
     speed = inSpeed;
-    xpos, ypos = 400;
-    lastX, lastY = 400;
+    xpos, ypos = 0;
+    lastX, lastY = 0;
     sensitivity = 0.1f;
     yaw = -90.0f;
     pitch = 0;  

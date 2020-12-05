@@ -68,6 +68,9 @@
     <ClCompile Include="MouseRay.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="SphereCollider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExternalAPIs">
@@ -1237,6 +1240,9 @@
       <Filter>Physics\include</Filter>
     </ClInclude>
     <ClInclude Include="MouseRay.h">
+      <Filter>Physics\include</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider.h">
       <Filter>Physics\include</Filter>
     </ClInclude>
   </ItemGroup>

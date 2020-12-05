@@ -112,8 +112,10 @@ int main(int argc, char** argv) {
 	else if (mode.CurMode() == Mode(EDITOR)) {
 	  renderer.DisplayEditor(&e_handler, editor.GetCamera(),
 				 editor.GetGuiContext());
-	  editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler, renderer.getMmat());
+	  
 	  editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
+	  //editor.GetMouseRay()->Update();
+	  editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler, renderer.getMmat());
 	}
 	curContext.Swap();
     }

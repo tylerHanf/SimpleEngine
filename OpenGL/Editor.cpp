@@ -60,37 +60,22 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
 
 void Editor::GetMouseMove(GLFWwindow* window) {
     double xpos, ypos;
+    glm::mat4 pMat = renderer->getPmat();
+    glm::mat4 vMat = renderer->getVmat();    
     glfwGetCursorPos(window, &xpos, &ypos);
     camera.LookAround(xpos, ypos);
+    pointer.Update(xpos, ypos, 1000, 1000, pMat, vMat, camera.getPosition());    
 }
 
 void Editor::GetMouseSelect(GLFWwindow* window) {
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
-  glm::mat4 pMat = renderer->getPmat();
-  glm::mat4 vMat = renderer->getVmat();
-
-  Debug::Instance().PrintError("updating");
-  pointer.Update(xpos, ypos, 1000, 1000, pMat, vMat);
-
-  /*
-  for (unsigned int i=0; i<entities->NumEntities(); i++) {
-    Entity* curEnt = entities->GetEntity(i);
-    if (curEnt->getBoxCollider()->isPicked(xpos, ypos, 1000, 1000, pMat, vMat)) {
-      glm::vec3 pos = curEnt->getLocation();
-      
-      Debug::Instance().PrintError(pos.x);
-      Debug::Instance().PrintError(pos.y);
-      Debug::Instance().PrintError(pos.z);
-      
-    }
-  }
-  Entity* picked = pointer.pointingAt();
+  
+  Entity* picked = pointer.pointingAt(entities);
   
   if (picked != NULL) {
     Debug::Instance().PrintError("picked");
   }
-  */
 }
 
 MouseRay* Editor::GetMouseRay(void) {

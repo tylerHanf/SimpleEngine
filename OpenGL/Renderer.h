@@ -9,6 +9,7 @@
 #include "ShaderHandler.h"
 #include "EntityHandler.h"
 #include "ModeHandler.h"
+#include "MouseRay.h"
 
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
@@ -38,5 +39,5 @@ class Renderer {
     int width, height;
     GL_Context* context;
 
-    void drawCollider(Entity* entity);
+  void drawCollider(Entity* entity, Entity* collider);
 };
