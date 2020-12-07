@@ -131,7 +131,7 @@ int main(int argc, char** argv) {
 	else if (mode.CurMode() == Mode(EDITOR)) {
 	  renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
  	  editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
-	  editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler, renderer.getMmat());
+	  editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), editor.GetSelectedEntity());
 	}
 
     }

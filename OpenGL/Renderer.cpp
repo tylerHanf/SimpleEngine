@@ -124,6 +124,9 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     int numEnts = entities->NumEntities();
     for (int i=0; i<numEnts; i++) {
         Entity* curEntity = entities->GetEntity(i);
+	if (curEntity->showingCollider()) {
+	  drawCollider(curEntity, entities);
+	}
 
         mvStack.push(mvStack.top());
 	mvStack.top() *= glm::translate(glm::mat4(1.0f), curEntity->getLocation());
@@ -137,42 +140,30 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glDrawArrays(GL_TRIANGLES, 0, entities->GetEntity(i)->numMeshVertices()/3);
-
 	mvStack.pop();
     }
     mvStack.pop();
-
-    drawCollider(entities->GetEntity(1), entities->GetEntity(2));
 }
 
-void Renderer::drawCollider(Entity* entity, Entity* collider) {
+void Renderer::drawCollider(Entity* entity, EntityHandler* entities) {
+  int colID = entity->isBoxCol() ? 1 : 2;
   // Draw line
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glLineWidth(2);
-  
   shaderHandler->Use(2);
   context->UseProgram(shaderHandler->GetCurProg());
-  
   shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
   shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
-  shaderHandler->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(0.9f, 0.8f, 0.9f));
-  shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
-  shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
-    
   mMat = glm::translate(glm::mat4(1.0f), entity->getLocation());
-
   shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
-
-  glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[colID]);  
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
-  glDrawArrays(GL_TRIANGLES, 0, collider->numMeshVertices()/3);
-
-  // Draw fill (normal)
+  glDrawArrays(GL_TRIANGLES, 0, entities->GetEntity(colID)->numMeshVertices()/3);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 

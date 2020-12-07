@@ -11,6 +11,7 @@ Editor::Editor(Renderer* curRenderer, GLFWwindow* window, EntityHandler* curEnti
     renderer = curRenderer;
     entities = curEntities;
     pointer = MouseRay();
+    selectedEntity = NULL;
 }
 
 void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
@@ -65,8 +66,10 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
     Entity* picked = pointer.pointingAt(entities);
   
     if (picked != NULL) {
-      Debug::Instance().PrintError("picked");    
+      selectedEntity = picked;
+      Debug::Instance().PrintError("Picked");
     }
+    else selectedEntity = NULL;
   }
 }
 
@@ -80,6 +83,10 @@ Camera* Editor::GetCamera(void) {
 
 GuiContext* Editor::GetGuiContext(void) {
   return &guiContext;
+}
+
+Entity* Editor::GetSelectedEntity(void) {
+  return selectedEntity;
 }
 
 

@@ -1,20 +1,23 @@
 #include "Entity.h"
 #include "Debug.h"
+#include <math.h>
 
 Entity::Entity(const char* filename, glm::vec3 locationObj) {
      mesh = new Mesh(filename);
      location = locationObj;
      transform = glm::translate(glm::mat4(1.0f), location);
-     hasCollider = 0;
-     isBox = 0;
+     hasCollider = false;
+     isBox = false;
+     showCol = false;
 }
 
 Entity::Entity(const char* filename, glm::vec3 locationObj, bool colType) {
      mesh = new Mesh(filename);
      location = locationObj;
      transform = glm::translate(glm::mat4(1.0f), location);
-     hasCollider = 1;
-     isBox = colType == true ? 1 : 0;  
+     hasCollider = true;
+     isBox = colType;
+     showCol = false;
 }
 
 Entity::~Entity(void) {
@@ -54,18 +57,34 @@ bool Entity::canCollide(void) {
   return hasCollider;
 }
 
+bool Entity::isBoxCol(void) {
+  return isBox;
+}
+
+bool Entity::showingCollider(void) {
+  return showCol;
+}
+
+void Entity::toggleCollider(void) {
+  showCol = !showCol;
+}
+
 /*
   Determine if object is intersected 
   given ray using sphere collider
  */
-bool Entity::sphereIntersect(glm::vec3 rayOrigin, glm::vec3 rayDir) {
+bool Entity::sphereIntersect(glm::vec3 rayOrigin, glm::vec3 rayDir, float* intersection) {
   float radius = fabs(location.x - mesh->getMax().x);
   glm::vec3 l = location - rayOrigin;
   float s = glm::dot(l, rayDir);
   float l_square = glm::dot(l, l);
-  if (s < 0 && l_square > radius*radius) return false;
+  float r_square = radius * radius;
+  if (s < 0 && l_square > r_square) return false;
   float m_square = l_square - s*s;
   if (m_square > radius) return false;
+  float q = sqrt(r_square - m_square);
+  if (l_square > r_square) *intersection = s - q;
+  else *intersection = s + q;
   return true;  
 }
 
@@ -73,7 +92,7 @@ bool Entity::sphereIntersect(glm::vec3 rayOrigin, glm::vec3 rayDir) {
   Determine if object is intersected 
   given ray using box collider
  */
-bool Entity::boxIntersect(glm::vec3 rayOrigin, glm::vec3 rayDir) {
+bool Entity::boxIntersect(glm::vec3 rayOrigin, glm::vec3 rayDir, float* intersection) {
   glm::vec3 min = mesh->getMin();
   glm::vec3 max = mesh->getMax();
   float tmin = 0.0f;
@@ -133,13 +152,18 @@ bool Entity::boxIntersect(glm::vec3 rayOrigin, glm::vec3 rayDir) {
     if (t1 > tmin) tmin = t1;
     if (tmax < tmin) return false;
   }
-  else if (-e + min.z > 0.0f || -e + max.z < 0.0f) return false;  
+  else if (-e + min.z > 0.0f || -e + max.z < 0.0f) return false;
+  if (tmin > 0) {
+    *intersection = tmin;
+    return true;
+  }
+  *intersection = tmax;
   return true;
 }  
  
-bool Entity::intersects(glm::vec3 rayOrigin, glm::vec3 rayDir) {
+bool Entity::intersects(glm::vec3 rayOrigin, glm::vec3 rayDir, float* intersection) {
   if (isBox) {
-    return boxIntersect(rayOrigin, rayDir);
+    return boxIntersect(rayOrigin, rayDir, intersection);
   }
-  return sphereIntersect(rayOrigin, rayDir);
+  return sphereIntersect(rayOrigin, rayDir, intersection);
 }
