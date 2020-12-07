@@ -21,18 +21,24 @@ const char* FRAG_COLLIDER_SHADER_PATH = "ColliderFrag.glsl";
 int width, height;
 
 /*
-Handles program initialization,
-not context init
+ Handles program initialization,
+ not context init
 */
 void InitProgram(void) {
     width = 1000;
     height = 1000;
 }
 
+/*
+ Handles window resizing
+*/
 void resizeCallback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
+/*
+ Key input for debug mode
+*/
 void GetKeyInput(GLFWwindow* window, Camera* camera, ModeHandler* mode,
 		 GL_Context* context) {
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -59,6 +65,9 @@ void GetKeyInput(GLFWwindow* window, Camera* camera, ModeHandler* mode,
     }
 }
 
+/*
+ Debug mouse input 
+*/
 void GetMouseInput(GLFWwindow* window, Camera* camera) {
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
@@ -66,16 +75,29 @@ void GetMouseInput(GLFWwindow* window, Camera* camera) {
 }
 
 /*
-TODOs:
-setup per object translation functions
-handle movement -> WIP
-Fix screen size changing
-Add debugging input features
-Consider implementing scripting
-    capabilities
+ TODOs:
 
-Make a time class to handle delays and timing (not using GLFW timing)
+ --Priority--
+ 1. get box colliders working
+ 2. decide on handling different colliders (may put off)
+ 3. start integrating textures
+ 4. make scripts for automating listing updates
+ 5. add model editing features
+ 6. check if bounding boxes are OBB and not AABB
+ 7. add easy editing features (like toggling rendering colliders)
+
+ --Casual--
+ consider making debug mode a class
+ setup per object transform functions within class
+ **handle movement
+ add debugging input features--?
+ make release version (or consider how to handle it)
+ look through for optimizations
+ think about custom space collider for hinckley
+
+ ** = in good shape for now
 */
+
 int main(int argc, char** argv) {
     EntityHandler e_handler;
     ShaderHandler s_handler;

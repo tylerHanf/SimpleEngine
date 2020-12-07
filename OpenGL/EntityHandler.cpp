@@ -3,7 +3,7 @@
 #include "Debug.h"
 
 void EntityHandler::AddEntity(const char* objPath, glm::vec3 pos) {
-    Entity* newEntity = new Entity(objPath, pos);
+    Entity* newEntity = new Entity(objPath, pos, true);
     entities.push_back(newEntity);
 }
 

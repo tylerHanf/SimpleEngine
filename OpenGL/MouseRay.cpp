@@ -30,8 +30,9 @@ glm::vec3 MouseRay::getOrigin(void) {
 
 Entity* MouseRay::pointingAt(EntityHandler* entities) {
   Entity* entity = entities->GetEntity(1);
-  SphereCollider* collider = entity->getSphereCollider();
+  //SphereCollider* collider = entity->getSphereCollider();
+  //BoxCollider* collider = entity->getBoxCollider();
   
-  if (collider->intersects(origin, ray)) return entity;
+  if (entity->intersects(origin, ray)) return entity;
   return NULL;
 }

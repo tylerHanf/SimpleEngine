@@ -12,7 +12,7 @@ class BoxCollider {
   glm::vec3 getCenter(void);
   glm::vec3 getHalfLengths(void);
   void RenderCollider(void);
-  bool isPicked(glm::vec3 ray);
+  bool intersects(glm::vec3 origin, glm::vec3 direction);
 
  /*
 
@@ -25,6 +25,8 @@ class BoxCollider {
   
  private:
   glm::vec3 size;
+  glm::vec3 mins;
+  glm::vec3 maxs;
   glm::vec3 halfLengths;
   glm::vec3 center;
   glm::mat4 points;
