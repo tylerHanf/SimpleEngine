@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Mesh.h"
-#include "BoxCollider.h"
-#include "SphereCollider.h"
+#include "Collider.h"
 #include <GLM/glm.hpp>
 
 class Entity {
@@ -19,9 +18,11 @@ class Entity {
   glm::mat4 getTransform(void);
   bool intersects(glm::vec3 rayOrigin, glm::vec3 rayDir, float* intersection);
   bool canCollide(void);
+  void addCollider(void);
   bool isBoxCol(void);
   bool showingCollider(void);
   void toggleCollider(void);
+  Collider* getCollider(void);  
     
  private:
   glm::vec3 location;
@@ -30,9 +31,5 @@ class Entity {
   //make vector if there is a potential for multiple
   Mesh* mesh;
   bool hasCollider;
-  bool isBox;
-  bool showCol;
-
-  bool boxIntersect(glm::vec3 rayOrigin, glm::vec3 rayDir, float* intersection);
-  bool sphereIntersect(glm::vec3 rayOrigin, glm::vec3 rayDir, float* intersection);
+  Collider collider;
 };

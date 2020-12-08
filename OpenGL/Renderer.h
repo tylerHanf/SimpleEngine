@@ -39,5 +39,5 @@ class Renderer {
     int width, height;
     GL_Context* context;
 
-  void drawCollider(Entity* entity, EntityHandler* entities);
+    void drawColliders(std::vector<Collider*> showColliders, EntityHandler* entities);
 };

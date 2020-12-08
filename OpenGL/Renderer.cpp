@@ -101,6 +101,7 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
 }
 
 void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext* gContext) {
+    std::vector<Collider*> showColliders;
     context->ClearDepthBuffer();
     context->ClearColorBuffer();
     shaderHandler->Use(1);
@@ -125,13 +126,11 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
     for (int i=0; i<numEnts; i++) {
         Entity* curEntity = entities->GetEntity(i);
 	if (curEntity->showingCollider()) {
-	  drawCollider(curEntity, entities);
+	  showColliders.push_back(curEntity->getCollider());
 	}
-
         mvStack.push(mvStack.top());
-	mvStack.top() *= glm::translate(glm::mat4(1.0f), curEntity->getLocation());
+	mvStack.top() *= curEntity->getTransform();
 	shaderHandler->SetMat4Uniform(Uniform(MODEL), mvStack.top());
-	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
@@ -139,32 +138,37 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext
 	glEnableVertexAttribArray(1);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	glDrawArrays(GL_TRIANGLES, 0, entities->GetEntity(i)->numMeshVertices()/3);
+	glDrawArrays(GL_TRIANGLES, 0, curEntity->numMeshVertices()/3);
 	mvStack.pop();
     }
     mvStack.pop();
+
+    drawColliders(showColliders, entities);
 }
 
-void Renderer::drawCollider(Entity* entity, EntityHandler* entities) {
-  int colID = entity->isBoxCol() ? 1 : 2;
-  // Draw line
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  glLineWidth(2);
-  shaderHandler->Use(2);
-  context->UseProgram(shaderHandler->GetCurProg());
-  shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
-  shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
-  mMat = glm::translate(glm::mat4(1.0f), entity->getLocation());
-  shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo[colID]);  
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
-  glDrawArrays(GL_TRIANGLES, 0, entities->GetEntity(colID)->numMeshVertices()/3);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+void Renderer::drawColliders(std::vector<Collider*> showColliders, EntityHandler* entities) {
+    // draw colliders
+    int meshID;
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glLineWidth(2);
+    shaderHandler->Use(2);
+    context->UseProgram(shaderHandler->GetCurProg());
+    shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
+    shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
+    for (auto collider : showColliders) {
+      meshID = collider->getEntityID();
+      mMat = collider->getTransform();
+      shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
+      glBindBuffer(GL_ARRAY_BUFFER, vbo[meshID]);  
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, 0);
+      glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (const void*)12);
+      glEnableVertexAttribArray(0);
+      glEnableVertexAttribArray(1);
+      glEnable(GL_DEPTH_TEST);
+      glDepthFunc(GL_LEQUAL);
+      glDrawArrays(GL_TRIANGLES, 0, entities->GetEntity(meshID)->numMeshVertices()/3);      
+    }
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 

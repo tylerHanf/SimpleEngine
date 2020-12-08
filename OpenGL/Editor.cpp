@@ -67,7 +67,6 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
   
     if (picked != NULL) {
       selectedEntity = picked;
-      Debug::Instance().PrintError("Picked");
     }
     else selectedEntity = NULL;
   }

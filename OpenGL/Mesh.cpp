@@ -56,10 +56,10 @@ int Mesh::getNumVertices(void) {
     return Vertices.size();
 }
 
-glm::vec3 Mesh::getMax(void) {
-  return max;
+glm::vec3* Mesh::getMax(void) {
+  return &max;
 }
 
-glm::vec3 Mesh::getMin(void) {
-  return min;
+glm::vec3* Mesh::getMin(void) {
+  return &min;
 }

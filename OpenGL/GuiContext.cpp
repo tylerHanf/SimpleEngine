@@ -22,10 +22,17 @@ void GuiContext::RenderGui(MouseRay* pointer, Entity* selectedEnt) {
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
   if (selectedEnt != NULL) {
-    glm::vec3 entityLoc = selectedEnt->getLocation();  
-    ImGui::Begin("Selected Entity");
+    glm::vec3 entityLoc = selectedEnt->getLocation();
+    ImGui::Begin("Entity Properties");
     ImGui::Text("Position worldspace: <%f, %f, %f>", entityLoc.x, entityLoc.y, entityLoc.z);
-    handleCollider(selectedEnt);
+    if (selectedEnt->canCollide()) {
+      if(ImGui::CollapsingHeader("Collider Properties"))
+	handleCollider(selectedEnt);
+    }
+    else {
+     if (ImGui::Button("Add Collider"))
+       selectedEnt->addCollider();
+    }
     ImGui::End();
   }
   ImGui::Render();
@@ -39,4 +46,9 @@ void GuiContext::handleCollider(Entity* selectedEnt) {
   }
   else if (ImGui::Button("Show collider"))
     selectedEnt->toggleCollider();
+
+  ImGui::SameLine();
+  
+  if (ImGui::Button("Switch Collider Type"))
+    selectedEnt->getCollider()->toggleShape();
 }

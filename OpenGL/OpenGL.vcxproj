@@ -165,8 +165,8 @@
     <ClCompile Include="..\ExternalAPIs\include\ImGUI\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\ExternalAPIs\include\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="..\glm-0.9.9.8\glm\detail\glm.cpp" />
-    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="DataFileHandler.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -181,7 +181,6 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
-    <ClCompile Include="SphereCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\assimp\include\assimp\ai_assert.h" />
@@ -517,8 +516,8 @@
     <ClInclude Include="..\glm-0.9.9.8\glm\simd\platform.h" />
     <ClInclude Include="..\glm-0.9.9.8\glm\simd\trigonometric.h" />
     <ClInclude Include="..\glm-0.9.9.8\glm\simd\vector_relational.h" />
-    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="DataFileHandler.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Editor.h" />
@@ -532,7 +531,6 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderHandler.h" />
-    <ClInclude Include="SphereCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assimp\include\assimp\.editorconfig" />

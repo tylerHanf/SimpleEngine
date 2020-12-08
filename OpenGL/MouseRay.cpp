@@ -35,7 +35,7 @@ Entity* MouseRay::pointingAt(EntityHandler* entities) {
   
   for (int i=0; i<entities->NumEntities(); i++) {
     Entity* curEnt = entities->GetEntity(i);
-    if (curEnt->intersects(origin, ray, &current)) {
+    if (curEnt->getCollider()->intersects(origin, ray, &current)) {
       if (current < closest) {
 	closest = current;
 	pickedEnt = curEnt;

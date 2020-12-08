@@ -62,13 +62,10 @@
     <ClCompile Include="GuiContext.cpp">
       <Filter>Editor\GuiContext</Filter>
     </ClCompile>
-    <ClCompile Include="BoxCollider.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
     <ClCompile Include="MouseRay.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="SphereCollider.cpp">
+    <ClCompile Include="Collider.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1236,13 +1233,10 @@
     <ClInclude Include="GuiContext.h">
       <Filter>Editor\GuiContext\include</Filter>
     </ClInclude>
-    <ClInclude Include="BoxCollider.h">
-      <Filter>Physics\include</Filter>
-    </ClInclude>
     <ClInclude Include="MouseRay.h">
       <Filter>Physics\include</Filter>
     </ClInclude>
-    <ClInclude Include="SphereCollider.h">
+    <ClInclude Include="Collider.h">
       <Filter>Physics\include</Filter>
     </ClInclude>
   </ItemGroup>

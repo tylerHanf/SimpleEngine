@@ -15,8 +15,8 @@ class Mesh {
     Mesh(const std::string& fileName);
     const float* getVertices(void);
     int getNumVertices(void);
-    glm::vec3 getMax(void);
-    glm::vec3 getMin(void);
+    glm::vec3* getMax(void);
+    glm::vec3* getMin(void);
     
  private:
     std::vector<float> Vertices;

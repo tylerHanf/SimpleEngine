@@ -85,6 +85,7 @@ void GetMouseInput(GLFWwindow* window, Camera* camera) {
  5. add model editing features
  6. check if bounding boxes are OBB and not AABB
  7. add easy editing features (like toggling rendering colliders)
+ 8. Multithread collision detection
 
  --Casual--
  consider making debug mode a class
