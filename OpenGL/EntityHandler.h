@@ -2,13 +2,21 @@
 
 #include <vector>
 #include "Entity.h"
+#include "DataFileHandler.h"
 
 class EntityHandler {
  public:
-    void AddEntity(const char* objPath, glm::vec3 pos);
-    Entity* GetEntity(unsigned int idx);
-    int NumEntities(void);
+  EntityHandler(DataFileHandler* loadedData);
+  void AddEntity(int meshID, glm::vec3 pos);
+  Entity* GetEntity(unsigned int idx);
+  std::vector<float> GetMesh(int idx);
+  int NumEntities(void);
+  int NumMeshes(void);
+  int NumTriangles(int meshIdx);
+  const char* GetMeshName(int meshIdx);
+  unsigned char* GetTexture(int meshIdx, int* width, int* height);
     
  private:
-    std::vector<Entity*> entities;
+  std::vector<meshData> meshData; 
+  std::vector<Entity*> entities;
 };

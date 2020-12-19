@@ -201,6 +201,9 @@ void Shader::setupUniforms(void) {
 	else if (!std::strcmp(name, "lightColor")) {
 	    light.lightColor = uLoc;
 	}
+	else if (!std::strcmp(name, "samp")) {
+	    basic.samp = uLoc;
+	}
 	else {
 	    Debug::Instance().PrintError("Unknown Uniform:");
 	    Debug::Instance().PrintError(name);

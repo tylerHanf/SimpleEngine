@@ -14,6 +14,7 @@ struct B_Uniforms {
     GLuint view;
     GLuint projection;
     GLuint objColor;
+    GLuint samp;
 };
 
 struct L_Uniforms {
@@ -53,7 +54,4 @@ class Shader {
     bool checkOpenGLError(void);
     inline void GL_SetMat4(GLuint loc, glm::mat4 val);
     inline void GL_SetVec3(GLuint loc, glm::vec3 val);
-    
-    
-    
 };

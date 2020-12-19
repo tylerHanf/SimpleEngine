@@ -1,20 +1,15 @@
 #pragma once
 
-#include "Mesh.h"
 #include "Collider.h"
 #include <GLM/glm.hpp>
 
 class Entity {
  public:
-  Entity(const char* filename, glm::vec3 location);
-  Entity(const char* filename, glm::vec3 location, bool colType);
+  Entity(int inMeshIdx, glm::vec3 location);
+  Entity(int inMeshIdx, glm::vec3 location, bool colType);
   ~Entity();
-  Mesh* getMesh(void);
   glm::vec3 getLocation(void);
-  const void* getMeshVertices(void);
-  int numMeshVertices(void);
-  glm::vec3 getMax(void);
-  glm::vec3 getMin(void);
+  int getMeshIdx(void);
   glm::mat4 getTransform(void);
   bool intersects(glm::vec3 rayOrigin, glm::vec3 rayDir, float* intersection);
   bool canCollide(void);
@@ -29,7 +24,8 @@ class Entity {
   glm::mat4 transform;  
   //Assume entity only has one mesh, could
   //make vector if there is a potential for multiple
-  Mesh* mesh;
+  int meshIdx;
+  int textureID;       // MAYBE
   bool hasCollider;
   Collider collider;
 };

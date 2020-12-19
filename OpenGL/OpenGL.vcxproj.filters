@@ -5,9 +5,6 @@
     <ClCompile Include="..\glm-0.9.9.8\glm\detail\glm.cpp">
       <Filter>ExternalAPIs\include\GLM\detail</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>EntityHandler\Entity\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
@@ -157,12 +154,6 @@
     <Filter Include="EntityHandler\Entity\include">
       <UniqueIdentifier>{9d7e30f1-908e-4e70-b753-8f3f42187a42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="EntityHandler\Entity\Mesh">
-      <UniqueIdentifier>{fc54f9b5-b20d-4b4c-be6f-94f032c30cab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="EntityHandler\Entity\Mesh\include">
-      <UniqueIdentifier>{1e48e7e6-34a6-4e6c-9eb1-0bbd7805f1e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Editor\DataFileHandler">
       <UniqueIdentifier>{311ca564-d67e-4731-b8ef-c387346dd4fb}</UniqueIdentifier>
     </Filter>
@@ -192,6 +183,9 @@
     </Filter>
     <Filter Include="Physics\include">
       <UniqueIdentifier>{75614f12-bec6-483c-af47-aaed6af2a6d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ExternalAPIs\include\STB_IMAGE">
+      <UniqueIdentifier>{3ce85ad3-6362-4214-8ec1-073f044b3e58}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1170,9 +1164,6 @@
     <ClInclude Include="..\glm-0.9.9.8\glm\simd\vector_relational.h">
       <Filter>ExternalAPIs\include\GLM\simd</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>EntityHandler\Entity\Mesh\include</Filter>
-    </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Debug\include</Filter>
     </ClInclude>
@@ -1238,6 +1229,9 @@
     </ClInclude>
     <ClInclude Include="Collider.h">
       <Filter>Physics\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExternalAPIs\include\STB_IMAGE\stb_image.h">
+      <Filter>ExternalAPIs\include\STB_IMAGE</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

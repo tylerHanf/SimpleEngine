@@ -9,7 +9,8 @@
 class GuiContext {
  public:
   GuiContext(GLFWwindow* window);
-  void RenderGui(MouseRay* ray, Entity* selectedEnt);
+  void RenderGui(MouseRay* ray, EntityHandler* selectedEnt, GLuint* fbo);
+  void ShowMeshSelector(EntityHandler* e_handler, GLuint* fbo);
   void handleCollider(Entity* selectedEnt);
   bool mouseInUse(void);
   

@@ -17,24 +17,12 @@ bool GuiContext::mouseInUse() {
   return ImGui::GetIO().WantCaptureMouse;
 }
 
-void GuiContext::RenderGui(MouseRay* pointer, Entity* selectedEnt) {
+void GuiContext::RenderGui(MouseRay* pointer, EntityHandler* selectedEnt, GLuint* fbo) {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-  if (selectedEnt != NULL) {
-    glm::vec3 entityLoc = selectedEnt->getLocation();
-    ImGui::Begin("Entity Properties");
-    ImGui::Text("Position worldspace: <%f, %f, %f>", entityLoc.x, entityLoc.y, entityLoc.z);
-    if (selectedEnt->canCollide()) {
-      if(ImGui::CollapsingHeader("Collider Properties"))
-	handleCollider(selectedEnt);
-    }
-    else {
-     if (ImGui::Button("Add Collider"))
-       selectedEnt->addCollider();
-    }
-    ImGui::End();
-  }
+  ImGui::ShowDemoWindow();
+  ShowMeshSelector(selectedEnt, fbo);
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -46,9 +34,21 @@ void GuiContext::handleCollider(Entity* selectedEnt) {
   }
   else if (ImGui::Button("Show collider"))
     selectedEnt->toggleCollider();
-
-  ImGui::SameLine();
   
+  ImGui::SameLine();
   if (ImGui::Button("Switch Collider Type"))
     selectedEnt->getCollider()->toggleShape();
+}
+
+void GuiContext::ShowMeshSelector(EntityHandler* e_handler, GLuint* fbo) {
+  //std::vector<std::string> meshNames = e_handler->GetMeshNames();
+  if(ImGui::CollapsingHeader("Add entity")) {
+    for (int i=0; i<e_handler->NumMeshes(); i++) {
+      ImGui::Selectable(e_handler->GetMeshName(i));
+      if (ImGui::IsItemHovered()) {
+	ImGui::SameLine();
+	ImGui::Image((void*) *fbo, ImVec2(240, 240), ImVec2(0, 1), ImVec2(1,0));
+      }
+    }
+  }
 }

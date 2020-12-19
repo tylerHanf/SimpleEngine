@@ -18,6 +18,8 @@ const char* VERT_LIGHT_SHADER_PATH = "basicLightVert.glsl";
 const char* FRAG_LIGHT_SHADER_PATH = "basicLightFrag.glsl";
 const char* VERT_COLLIDER_SHADER_PATH = "ColliderVert.glsl";
 const char* FRAG_COLLIDER_SHADER_PATH = "ColliderFrag.glsl";
+const char* VERT_GUI_SHADER_PATH = "GuiVertShader.glsl";
+const char* FRAG_GUI_SHADER_PATH = "GuiFragShader.glsl";
 int width, height;
 
 /*
@@ -78,6 +80,7 @@ void GetMouseInput(GLFWwindow* window, Camera* camera) {
  TODOs:
 
  --Priority--
+ TOP: DATA-ORIENTED DESIGN
  1. get box colliders working
  2. decide on handling different colliders (may put off)
  3. start integrating textures
@@ -100,40 +103,45 @@ void GetMouseInput(GLFWwindow* window, Camera* camera) {
 */
 
 int main(int argc, char** argv) {
-    EntityHandler e_handler;
+
     ShaderHandler s_handler;
-    DataFileHandler filehandler = DataFileHandler(&e_handler, &s_handler); 
     
     ModeHandler mode = ModeHandler((const char**) argv, argc);
     InitProgram();
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
     GL_Context curContext = GL_Context(width, height, WINDOW_NAME);
+    DataFileHandler dataHandler;
+    EntityHandler e_handler(&dataHandler);    
     
     s_handler.AddShader(VERT_SHADER_PATH, FRAG_SHADER_PATH);
     s_handler.AddShader(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
     s_handler.AddShader(VERT_COLLIDER_SHADER_PATH, FRAG_COLLIDER_SHADER_PATH);
+    //s_handler.AddShader(VERT_GUI_SHADER_PATH, FRAG_GUI_SHADER_PATH);
     Renderer renderer = Renderer(&curContext, &s_handler, &mode);
     Editor editor = Editor(&renderer, curContext.getWindow(), &e_handler);
 
-    renderer.LoadData(&e_handler);
+    renderer.LoadData(&dataHandler, &camera);
+
     curContext.ResizeCallback(&resizeCallback);
     glfwSetInputMode(curContext.getWindow(), GLFW_STICKY_KEYS, GLFW_TRUE);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
-
+    renderer.drawMeshPreviews(&dataHandler, editor.GetCamera(), true);
     while(!curContext.ExitWindow()) {
-      	curContext.Swap();
+        curContext.Swap();
 	curContext.Poll();	  	
-        if (mode.CurMode() == Mode(DEBUG)) {
+        /*if (mode.CurMode() == Mode(DEBUG)) {
 	    renderer.DisplayDebug(&e_handler, &camera);
 	    GetKeyInput(curContext.getWindow(), &camera, &mode, &curContext);
 	    GetMouseInput(curContext.getWindow(), &camera);
 	}
-	else if (mode.CurMode() == Mode(EDITOR)) {
-	  renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
- 	  editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
-	  editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), editor.GetSelectedEntity());
-	}
+	*/
+	
+	//else if (mode.CurMode() == Mode(EDITOR)) {
+	renderer.drawMeshPreviews(&dataHandler, editor.GetCamera(), false);
+	//renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
+	editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
+	editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler, renderer.getFramebuffer(0));
 
     }
     curContext.Terminate();

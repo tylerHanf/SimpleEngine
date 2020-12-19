@@ -62,13 +62,13 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
     glm::mat4 vMat = renderer->getVmat();
     int width, height;
     glfwGetWindowSize(window, &width, &height);
-    pointer.Update(xpos, ypos, width, height, pMat, vMat, camera.getPosition());      
-    Entity* picked = pointer.pointingAt(entities);
+    //pointer.Update(xpos, ypos, width, height, pMat, vMat, camera.getPosition());      
+    //Entity* picked = pointer.pointingAt(entities);
   
-    if (picked != NULL) {
+    /*if (picked != NULL) {
       selectedEntity = picked;
     }
-    else selectedEntity = NULL;
+    else selectedEntity = NULL;*/
   }
 }
 
