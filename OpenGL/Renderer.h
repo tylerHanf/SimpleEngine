@@ -24,8 +24,8 @@ class Renderer {
   void DisplayDebug(EntityHandler* entities, Camera* camera);
   void DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext* gContext);
   void LoadData(DataFileHandler* meshes, Camera* camera);
-  void InitializeFramebuffer();
-  void drawMeshPreviews(DataFileHandler* loadedData, Camera* camera, bool renderToFBO);
+  void InitializeFramebuffer(DataFileHandler* loadedData);
+  void drawMeshPreviews(DataFileHandler* loadedData, Camera* camera);
   GLuint getVBOIdx(int idx);
   glm::mat4 getPmat(void);
   glm::mat4 getVmat(void);
@@ -34,8 +34,9 @@ class Renderer {
     
  private:
   std::vector<GLuint> vao, vbo, fbo;
-  GLuint renderedTexture, depthrenderbuffer, testFbo;
   std::vector<unsigned int> textIDs;
+  std::vector<unsigned int> renderToTexts;
+  std::vector<unsigned int> depthRenderbuffers;
   ShaderHandler* shaderHandler;
   ModeHandler* mode; 
   GLuint mvLoc, projLoc;

@@ -42,7 +42,7 @@ void DataFileHandler::LoadMeshes(void) {
 void DataFileHandler::GetVertices(meshData* newMesh, const char* meshFileName) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(meshFileName, aiProcess_Triangulate);
-
+    
     if (!scene) {
 	Debug::Instance().PrintError("Failed to read mesh from file");
     }

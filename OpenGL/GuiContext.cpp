@@ -47,7 +47,7 @@ void GuiContext::ShowMeshSelector(EntityHandler* e_handler, GLuint* fbo) {
       ImGui::Selectable(e_handler->GetMeshName(i));
       if (ImGui::IsItemHovered()) {
 	ImGui::SameLine();
-	ImGui::Image((void*) *fbo, ImVec2(240, 240), ImVec2(0, 1), ImVec2(1,0));
+	ImGui::Image((void*) *fbo, ImVec2(400, 400));
       }
     }
   }

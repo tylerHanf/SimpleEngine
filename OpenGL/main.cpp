@@ -126,7 +126,8 @@ int main(int argc, char** argv) {
     glfwSetInputMode(curContext.getWindow(), GLFW_STICKY_KEYS, GLFW_TRUE);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
-    renderer.drawMeshPreviews(&dataHandler, editor.GetCamera(), true);
+    renderer.drawMeshPreviews(&dataHandler, editor.GetCamera());
+    
     while(!curContext.ExitWindow()) {
         curContext.Swap();
 	curContext.Poll();	  	
@@ -138,12 +139,14 @@ int main(int argc, char** argv) {
 	*/
 	
 	//else if (mode.CurMode() == Mode(EDITOR)) {
-	renderer.drawMeshPreviews(&dataHandler, editor.GetCamera(), false);
-	//renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
-	editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
-	editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler, renderer.getFramebuffer(0));
 
+	//renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
+	renderer.drawMeshPreviews(&dataHandler, editor.GetCamera());
+	editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
+	editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler,
+					  renderer.getFramebuffer(0));
     }
+    
     curContext.Terminate();
     return 0;
 }
