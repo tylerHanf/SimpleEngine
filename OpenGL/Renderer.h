@@ -26,17 +26,20 @@ class Renderer {
   void LoadData(DataFileHandler* meshes, Camera* camera);
   void InitializeFramebuffer(DataFileHandler* loadedData);
   void drawMeshPreviews(DataFileHandler* loadedData, Camera* camera);
+  unsigned int previewMesh(DataFileHandler* loadedData, Camera* camera);
   GLuint getVBOIdx(int idx);
   glm::mat4 getPmat(void);
   glm::mat4 getVmat(void);
   glm::mat4 getMmat(void);
   GLuint* getFramebuffer(int index);
+  void clearFramebuffer();
     
  private:
   std::vector<GLuint> vao, vbo, fbo;
   std::vector<unsigned int> textIDs;
   std::vector<unsigned int> renderToTexts;
   std::vector<unsigned int> depthRenderbuffers;
+  unsigned int testfbo, testTexture, testRenderbuffer;
   ShaderHandler* shaderHandler;
   ModeHandler* mode; 
   GLuint mvLoc, projLoc;

@@ -3,7 +3,7 @@
 
 Collider::Collider(void) {
   size = glm::vec3(1.0f);
-  location = &glm::vec3(1.0f);
+  //location = &glm::vec3(1.0f);
   min = NULL;
   max = NULL;
 }

@@ -42,29 +42,29 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
 
   //Assume each entity only has one mesh
   int j = 0; // counter for textures
-  for (int i=0; i < 1; i++) {
+  for (int i=0; i < 2; i++) {
     curMesh = meshes->GetMesh(i);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
     glBufferData(GL_ARRAY_BUFFER, curMesh->vertData.size()*sizeof(float),
-		 (const void*) &(curMesh->vertData[0]), GL_STATIC_DRAW);
+		 (const void*) &(curMesh->vertData[i]), GL_STATIC_DRAW);
     
     if (curMesh->textData) {
-      glBindTexture(GL_TEXTURE_2D, textIDs[0]);
+      glBindTexture(GL_TEXTURE_2D, textIDs[j]);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, curMesh->textWidth,
 		   curMesh->textHeight, 0, GL_RGB, GL_UNSIGNED_BYTE,
-		   curMesh->textData);
+		   curMesh->textData);      
 
-      //glGenerateMipmap(GL_TEXTURE_2D);
+      glGenerateMipmap(GL_TEXTURE_2D);
       meshes->SetTextID(i, j);
       j++;
       glBindTexture(GL_TEXTURE_2D, 0);
     }
   }
-  InitializeFramebuffer(meshes);
+  //InitializeFramebuffer(meshes);
 }
 
 void Renderer::InitializeFramebuffer(DataFileHandler* loadedData) {
@@ -92,6 +92,76 @@ void Renderer::InitializeFramebuffer(DataFileHandler* loadedData) {
   
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
+}
+
+unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera) {
+  glGenFramebuffers(1, &testfbo);
+  glBindFramebuffer(GL_FRAMEBUFFER, testfbo);
+  glGenTextures(1, &testTexture);
+  glBindTexture(GL_TEXTURE_2D, testTexture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1000, 1000, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);  
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, testTexture, 0);
+
+  glGenRenderbuffers(1, &testRenderbuffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, testRenderbuffer);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1000, 1000);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, testRenderbuffer);
+  context->ClearDepthBuffer();
+  context->ClearColorBuffer();
+  shaderHandler->Use(0);
+  context->UseProgram(shaderHandler->GetCurProg());
+
+  context->GetFrameBufferSize(&width, &height);
+  aspect = (float)width/(float)height;
+
+  pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
+  vMat = glm::lookAt(camera->getPosition(), camera->GetLookAt(),
+		     camera->GetUp());
+  
+  shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
+  shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
+  
+  for (int i=1; i<2; i++) {
+    meshData* curMesh = loadedData->GetMesh(i);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
+
+    mMat = glm::translate(glm::mat4(1.0),glm::vec3(0.0f, 0.0f, -5.0f));
+    mMat *= glm::rotate(glm::mat4(1.0f), 0.5f, glm::vec3(1.0f, 0.5f, 0.0f));
+    shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);    
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
+
+    if (curMesh->textData) {
+      glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);
+      glEnableVertexAttribArray(2);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, textIDs[curMesh->textID]);      
+    }
+    
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glDrawArrays(GL_TRIANGLES, 0, curMesh->vertData.size());
+  }
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  return testfbo;
+}
+
+void Renderer::clearFramebuffer() {
+  if (testfbo > 2) {
+    glDeleteFramebuffers(1, &testfbo);
+    testfbo = 0;
+    glDeleteTextures(1, &testTexture);
+    glDeleteRenderbuffers(1, &testRenderbuffer);
+    }
 }
 
 GLuint Renderer::getVBOIdx(int idx) {
@@ -233,7 +303,7 @@ void Renderer::drawMeshPreviews(DataFileHandler* loadedData, Camera* camera) {
     meshData* curMesh = loadedData->GetMesh(i);
     
     glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
-    glBindBuffer(GL_FRAMEBUFFER, fbo[i]);
+    //glBindBuffer(GL_FRAMEBUFFER, fbo[i]);
 
     mMat = glm::translate(glm::mat4(1.0),glm::vec3(0.0f, 0.0f, -500.0f));
     mMat *= glm::rotate(glm::mat4(1.0f), 0.5f, glm::vec3(1.0f, 0.5f, 0.0f));

@@ -142,9 +142,12 @@ int main(int argc, char** argv) {
 
 	//renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
 	renderer.drawMeshPreviews(&dataHandler, editor.GetCamera());
+	renderer.clearFramebuffer();
+	unsigned int testfbo = renderer.previewMesh(&dataHandler, editor.GetCamera());
+	Debug::Instance().PrintError(testfbo);
 	editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
-	editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler,
-					  renderer.getFramebuffer(0));
+	editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler, &testfbo);
+	//renderer.clearFramebuffer();
     }
     
     curContext.Terminate();
