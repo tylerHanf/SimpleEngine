@@ -22,7 +22,20 @@ void GuiContext::RenderGui(MouseRay* pointer, EntityHandler* selectedEnt, GLuint
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
   ImGui::ShowDemoWindow();
-  ShowMeshSelector(selectedEnt, fbo);
+  //ShowMeshSelector(selectedEnt, fbo);
+  ImGui::Render();
+  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void GuiContext::StartFrame() {
+  ImGui_ImplOpenGL3_NewFrame();
+  ImGui_ImplGlfw_NewFrame();
+  ImGui::NewFrame();
+  ImGui::Begin("Test");
+}
+
+void GuiContext::Render() {
+  ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -40,14 +53,17 @@ void GuiContext::handleCollider(Entity* selectedEnt) {
     selectedEnt->getCollider()->toggleShape();
 }
 
-void GuiContext::ShowMeshSelector(EntityHandler* e_handler, GLuint* fbo) {
+void GuiContext::ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
+				  Renderer* renderer) {
   //std::vector<std::string> meshNames = e_handler->GetMeshNames();
   if(ImGui::CollapsingHeader("Add entity")) {
-    for (int i=0; i<e_handler->NumMeshes(); i++) {
-      ImGui::Selectable(e_handler->GetMeshName(i));
+    for (int i=0; i<loadedData->NumMeshes(); i++) {
+      ImGui::Selectable(loadedData->GetMeshName(i));
       if (ImGui::IsItemHovered()) {
+	Debug::Instance().PrintError("Mesh called");
+	unsigned int test = renderer->previewMesh(loadedData, camera, i);
 	ImGui::SameLine();
-	ImGui::Image((void*) *fbo, ImVec2(400, 400));
+	ImGui::Image((void*) test, ImVec2(400, 400));
       }
     }
   }

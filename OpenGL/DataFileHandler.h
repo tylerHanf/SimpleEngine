@@ -26,6 +26,7 @@ class DataFileHandler {
   meshData* GetMesh(int meshIdx);
   int NumMeshes(void);
   int NumTextures(void);
+  const char* GetMeshName(int meshIdx);
     
  private:
   // Entity filepaths

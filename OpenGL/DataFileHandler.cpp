@@ -106,3 +106,7 @@ int DataFileHandler::NumMeshes(void) {
 int DataFileHandler::NumTextures(void) {
   return numTextures;
 }
+
+const char* DataFileHandler::GetMeshName(int meshIdx) {
+  return objectData[meshIdx].meshName.c_str();
+}

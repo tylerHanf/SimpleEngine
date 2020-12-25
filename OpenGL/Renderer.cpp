@@ -5,7 +5,8 @@
 Renderer constructor, also makes rendering program
 Must be called after GL_Context obj is made
 */
-Renderer::Renderer(GL_Context* contextObj, ShaderHandler* shaders, ModeHandler* modeH) {
+Renderer::Renderer(GL_Context* contextObj, ShaderHandler* shaders,
+		   ModeHandler* modeH) {
     width, height = 0;
     context = contextObj;
     shaderHandler = shaders;
@@ -33,16 +34,9 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
   glGenTextures(numTexts, (GLuint*)&textIDs[0]);
   glBindVertexArray(vao[0]);
 
-  /*glBindTexture(GL_TEXTURE_2D, textIDs[0]);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1000, 1000, 0, GL_RGB, GL_UNSIGNED_BYTE,
-	       NULL);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);*/
-  //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textIDs[0]);
-
   //Assume each entity only has one mesh
   int j = 0; // counter for textures
-  for (int i=0; i < 2; i++) {
+  for (int i=0; i<2; i++) {
     curMesh = meshes->GetMesh(i);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
     glBufferData(GL_ARRAY_BUFFER, curMesh->vertData.size()*sizeof(float),
@@ -69,16 +63,27 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
 
 void Renderer::InitializeFramebuffer(DataFileHandler* loadedData) {
   renderToTexts.resize(loadedData->NumMeshes());
+  //int numTextures = loadedData->NumTextures();
   depthRenderbuffers.resize(loadedData->NumMeshes());
   glGenFramebuffers(loadedData->NumMeshes(), &fbo[0]);
   glGenRenderbuffers(depthRenderbuffers.size(), &depthRenderbuffers[0]);
-  glGenTextures(renderToTexts.size(), (GLuint*) &renderToTexts[0]);
-  Debug::Instance().PrintError(renderToTexts.size());
+  glGenTextures(loadedData->NumTextures(), (GLuint*) &renderToTexts[0]);
   
-  for (int i=0; i<1; i++) {
+  for (int i=0; i<2; i++) {
     glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
 			   renderToTexts[i], 0);
+
+    glBindTexture(GL_TEXTURE_2D, renderToTexts[i]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1000, 1000, 0, GL_RGB, GL_UNSIGNED_BYTE,
+		 NULL);
+  
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+			   renderToTexts[i], 0);    
     
     //render buffer
     glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffers[i]);
@@ -94,78 +99,89 @@ void Renderer::InitializeFramebuffer(DataFileHandler* loadedData) {
   }
 }
 
-unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera) {
+unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera,
+				   int meshIndex) {
   glGenFramebuffers(1, &testfbo);
   glBindFramebuffer(GL_FRAMEBUFFER, testfbo);
   glGenTextures(1, &testTexture);
   glBindTexture(GL_TEXTURE_2D, testTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1000, 1000, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);  
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1000, 1000, 0, GL_RGB, GL_UNSIGNED_BYTE,
+	       NULL);
+  
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, testTexture, 0);
-
+  glBindTexture(GL_TEXTURE_2D, 0);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+			 testTexture, 0);  
   glGenRenderbuffers(1, &testRenderbuffer);
   glBindRenderbuffer(GL_RENDERBUFFER, testRenderbuffer);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1000, 1000);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, testRenderbuffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+			    testRenderbuffer);
+  
   context->ClearDepthBuffer();
   context->ClearColorBuffer();
   shaderHandler->Use(0);
   context->UseProgram(shaderHandler->GetCurProg());
-
   context->GetFrameBufferSize(&width, &height);
+  
   aspect = (float)width/(float)height;
-
   pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
   vMat = glm::lookAt(camera->getPosition(), camera->GetLookAt(),
 		     camera->GetUp());
-  
+
   shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
   shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
   
-  for (int i=1; i<2; i++) {
-    meshData* curMesh = loadedData->GetMesh(i);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
+  meshData* curMesh = loadedData->GetMesh(meshIndex);
 
-    mMat = glm::translate(glm::mat4(1.0),glm::vec3(0.0f, 0.0f, -5.0f));
-    mMat *= glm::rotate(glm::mat4(1.0f), 0.5f, glm::vec3(1.0f, 0.5f, 0.0f));
-    shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);    
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[meshIndex]);
 
-    if (curMesh->textData) {
-      glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);
-      glEnableVertexAttribArray(2);
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, textIDs[curMesh->textID]);      
-    }
+  mMat = glm::translate(glm::mat4(1.0),glm::vec3(0.0f, 0.0f, -5.0f));
+  mMat *= glm::rotate(glm::mat4(1.0f), 0.5f, glm::vec3(1.0f, 0.5f, 0.0f));
+  shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);    
     
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glDrawArrays(GL_TRIANGLES, 0, curMesh->vertData.size());
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
+
+  if (curMesh->textData) {
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);
+    glEnableVertexAttribArray(2);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textIDs[curMesh->textID]);      
   }
+    
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+    
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
+  glDrawArrays(GL_TRIANGLES, 0, curMesh->vertData.size());
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  return testfbo;
+  glBindTexture(GL_TEXTURE_2D, 0);
+  return testTexture;
 }
 
 void Renderer::clearFramebuffer() {
-  if (testfbo > 2) {
+  //if (testfbo > 2) {
+  Debug::Instance().PrintError(testTexture);
     glDeleteFramebuffers(1, &testfbo);
-    testfbo = 0;
+    //testfbo = 0;
     glDeleteTextures(1, &testTexture);
     glDeleteRenderbuffers(1, &testRenderbuffer);
-    }
+    //}
 }
 
 GLuint Renderer::getVBOIdx(int idx) {
   return vbo[idx];
+}
+
+GLuint* Renderer::getTextID(int idx) {
+  Debug::Instance().PrintError(renderToTexts[idx]);
+  return &renderToTexts[idx];
 }
 
 glm::mat4 Renderer::getPmat(void) {
@@ -232,6 +248,7 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
     mvStack.pop();
 }
 
+/*
 void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera,
 			     GuiContext* gContext) {
   std::vector<Collider*> showColliders;
@@ -260,9 +277,9 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera,
   for (int i=0; i<numEnts; i++) {
     Entity* curEntity = entities->GetEntity(i);
     meshIdx = curEntity->getMeshIdx();
-    /*if (curEntity->showingCollider()) {
+    if (curEntity->showingCollider()) {
       showColliders.push_back(curEntity->getCollider());
-      }*/
+      }
     mvStack.push(mvStack.top());
     mvStack.top() *= curEntity->getTransform();
     shaderHandler->SetMat4Uniform(Uniform(MODEL), mvStack.top());    
@@ -282,36 +299,38 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera,
   mvStack.pop();
     //drawColliders(showColliders, entities);
 }
-
+*/
 void Renderer::drawMeshPreviews(DataFileHandler* loadedData, Camera* camera) {
-  context->ClearDepthBuffer();
-  context->ClearColorBuffer();
-  shaderHandler->Use(0);
-  context->UseProgram(shaderHandler->GetCurProg());
+  for (int i=0; i<2; i++) {
+    context->ClearDepthBuffer();
+    context->ClearColorBuffer();    
 
-  context->GetFrameBufferSize(&width, &height);
-  aspect = (float)width/(float)height;
+    shaderHandler->Use(0);
+    context->UseProgram(shaderHandler->GetCurProg());
 
-  pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
-  vMat = glm::lookAt(camera->getPosition(), camera->GetLookAt(),
-		     camera->GetUp());
+    context->GetFrameBufferSize(&width, &height);
+    aspect = (float)width/(float)height;
+
+    pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
+    vMat = glm::lookAt(camera->getPosition(), camera->GetLookAt(),
+		       camera->GetUp());
   
-  shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
-  shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
-  
-  for (int i=0; i<1; i++) {
+    shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
+    shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
+
     meshData* curMesh = loadedData->GetMesh(i);
     
     glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
-    //glBindBuffer(GL_FRAMEBUFFER, fbo[i]);
 
-    mMat = glm::translate(glm::mat4(1.0),glm::vec3(0.0f, 0.0f, -500.0f));
+    mMat = glm::translate(glm::mat4(1.0),glm::vec3(0.0f, 0.0f, -50.0f));
     mMat *= glm::rotate(glm::mat4(1.0f), 0.5f, glm::vec3(1.0f, 0.5f, 0.0f));
     shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);    
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
-
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    
     if (curMesh->textData) {
       glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);
       glEnableVertexAttribArray(2);
@@ -319,14 +338,11 @@ void Renderer::drawMeshPreviews(DataFileHandler* loadedData, Camera* camera) {
       glBindTexture(GL_TEXTURE_2D, textIDs[curMesh->textID]);      
     }
     
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glDrawArrays(GL_TRIANGLES, 0, curMesh->vertData.size());
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);        
   }
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 /*
