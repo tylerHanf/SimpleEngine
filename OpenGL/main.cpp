@@ -140,18 +140,15 @@ int main(int argc, char** argv) {
 	//else if (mode.CurMode() == Mode(EDITOR)) {
 
 	//renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
-	//renderer.drawMeshPreviews(&dataHandler, editor.GetCamera());
-	//unsigned int test = renderer.previewMesh(&dataHandler, editor.GetCamera());
+	//Test for drawing validly
 	renderer.drawMeshPreviews(&dataHandler, editor.GetCamera());
-	editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
-	/*editor.GetGuiContext()->RenderGui(editor.GetMouseRay(), &e_handler,
-	  &test);*/
 
+	//Gui render
+	editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
 	editor.GetGuiContext()->StartFrame();
 	editor.GetGuiContext()->ShowMeshSelector(&dataHandler, editor.GetCamera(),
 						 &renderer);
 	editor.GetGuiContext()->Render();
-	Debug::Instance().PrintError("Render called");
 	renderer.clearFramebuffer();
     }
     

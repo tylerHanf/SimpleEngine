@@ -31,7 +31,7 @@ void GuiContext::StartFrame() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-  ImGui::Begin("Test");
+  ImGui::Begin("Mesh Selector");
 }
 
 void GuiContext::Render() {
@@ -60,10 +60,14 @@ void GuiContext::ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
     for (int i=0; i<loadedData->NumMeshes(); i++) {
       ImGui::Selectable(loadedData->GetMeshName(i));
       if (ImGui::IsItemHovered()) {
-	Debug::Instance().PrintError("Mesh called");
-	unsigned int test = renderer->previewMesh(loadedData, camera, i);
+	unsigned int textureID = renderer->previewMesh(loadedData, camera, i);
+	int windowWidth = ImGui::GetWindowWidth();
+	int windowHeight = ImGui::GetWindowHeight();
+	ImGui::SetNextWindowPos(ImVec2(windowWidth, 0));
+	ImGui::Begin("Mesh Preview");
 	ImGui::SameLine();
-	ImGui::Image((void*) test, ImVec2(400, 400));
+	ImGui::Image((void*) textureID, ImVec2(400, 400));
+	ImGui::End();
       }
     }
   }

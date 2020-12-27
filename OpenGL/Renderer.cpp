@@ -25,7 +25,6 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
     
   vao.resize(numVAOs);
   vbo.resize(numMeshes);
-  fbo.resize(numMeshes);
   textIDs.resize(numTexts);
 
   glGenVertexArrays(numVAOs, (GLuint*)&vao[0]);
@@ -36,7 +35,7 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
 
   //Assume each entity only has one mesh
   int j = 0; // counter for textures
-  for (int i=0; i<2; i++) {
+  for (int i=0; i<numMeshes; i++) {
     curMesh = meshes->GetMesh(i);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
     glBufferData(GL_ARRAY_BUFFER, curMesh->vertData.size()*sizeof(float),
@@ -58,53 +57,14 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
       glBindTexture(GL_TEXTURE_2D, 0);
     }
   }
-  //InitializeFramebuffer(meshes);
-}
-
-void Renderer::InitializeFramebuffer(DataFileHandler* loadedData) {
-  renderToTexts.resize(loadedData->NumMeshes());
-  //int numTextures = loadedData->NumTextures();
-  depthRenderbuffers.resize(loadedData->NumMeshes());
-  glGenFramebuffers(loadedData->NumMeshes(), &fbo[0]);
-  glGenRenderbuffers(depthRenderbuffers.size(), &depthRenderbuffers[0]);
-  glGenTextures(loadedData->NumTextures(), (GLuint*) &renderToTexts[0]);
-  
-  for (int i=0; i<2; i++) {
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-			   renderToTexts[i], 0);
-
-    glBindTexture(GL_TEXTURE_2D, renderToTexts[i]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1000, 1000, 0, GL_RGB, GL_UNSIGNED_BYTE,
-		 NULL);
-  
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-			   renderToTexts[i], 0);    
-    
-    //render buffer
-    glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffers[i]);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1000, 1000);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
-			      depthRenderbuffers[i]);
-    
-    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-      Debug::Instance().PrintError("Failed to create framebuffer");
-    }
-  
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  }
 }
 
 unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera,
 				   int meshIndex) {
-  glGenFramebuffers(1, &testfbo);
-  glBindFramebuffer(GL_FRAMEBUFFER, testfbo);
-  glGenTextures(1, &testTexture);
-  glBindTexture(GL_TEXTURE_2D, testTexture);
+  glGenFramebuffers(1, &fbo);
+  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+  glGenTextures(1, &renderTexture);
+  glBindTexture(GL_TEXTURE_2D, renderTexture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1000, 1000, 0, GL_RGB, GL_UNSIGNED_BYTE,
 	       NULL);
   
@@ -114,13 +74,13 @@ unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera,
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glBindTexture(GL_TEXTURE_2D, 0);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-			 testTexture, 0);  
-  glGenRenderbuffers(1, &testRenderbuffer);
-  glBindRenderbuffer(GL_RENDERBUFFER, testRenderbuffer);
+			 renderTexture, 0);  
+  glGenRenderbuffers(1, &renderbuffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1000, 1000);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
-			    testRenderbuffer);
+			    renderbuffer);
   
   context->ClearDepthBuffer();
   context->ClearColorBuffer();
@@ -148,6 +108,7 @@ unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera,
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
 
   if (curMesh->textData) {
+    //Debug::Instance().PrintError("Test");
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);
     glEnableVertexAttribArray(2);
     glActiveTexture(GL_TEXTURE0);
@@ -162,17 +123,13 @@ unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera,
   glDrawArrays(GL_TRIANGLES, 0, curMesh->vertData.size());
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
-  return testTexture;
+  return renderTexture;
 }
 
 void Renderer::clearFramebuffer() {
-  //if (testfbo > 2) {
-  Debug::Instance().PrintError(testTexture);
-    glDeleteFramebuffers(1, &testfbo);
-    //testfbo = 0;
-    glDeleteTextures(1, &testTexture);
-    glDeleteRenderbuffers(1, &testRenderbuffer);
-    //}
+  glDeleteFramebuffers(1, &fbo);
+  glDeleteTextures(1, &renderTexture);
+  glDeleteRenderbuffers(1, &renderbuffer);
 }
 
 GLuint Renderer::getVBOIdx(int idx) {
@@ -180,8 +137,7 @@ GLuint Renderer::getVBOIdx(int idx) {
 }
 
 GLuint* Renderer::getTextID(int idx) {
-  Debug::Instance().PrintError(renderToTexts[idx]);
-  return &renderToTexts[idx];
+  return &textIDs[idx];
 }
 
 glm::mat4 Renderer::getPmat(void) {
@@ -197,7 +153,7 @@ glm::mat4 Renderer::getMmat(void) {
 }
 
 GLuint* Renderer::getFramebuffer(int index) {
-  return &fbo[index];
+  return &fbo;
 }
 
 /*

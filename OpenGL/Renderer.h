@@ -36,11 +36,9 @@ class Renderer {
   void clearFramebuffer();
     
  private:
-  std::vector<GLuint> vao, vbo, fbo;
+  std::vector<GLuint> vao, vbo;
   std::vector<unsigned int> textIDs;
-  std::vector<unsigned int> renderToTexts;
-  std::vector<unsigned int> depthRenderbuffers;
-  unsigned int testfbo, testTexture, testRenderbuffer;
+  unsigned int fbo, renderTexture, renderbuffer;
   ShaderHandler* shaderHandler;
   ModeHandler* mode; 
   GLuint mvLoc, projLoc;
