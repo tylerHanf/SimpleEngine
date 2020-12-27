@@ -19,6 +19,7 @@ Loads vertices into GPU from entity objects
 void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
   //Note the number of VAOs, just for initial build
   int numMeshes = meshes->NumMeshes();
+  Debug::Instance().PrintError(numMeshes);
   int numTexts = meshes->NumTextures();
   int numVAOs = 1;
   meshData* curMesh;
@@ -28,7 +29,6 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
   textIDs.resize(numTexts);
 
   glGenVertexArrays(numVAOs, (GLuint*)&vao[0]);
-  //glGenFramebuffers(numVBOs, (GLuint*)&fbo[0]);
   glGenBuffers(numMeshes, (GLuint*)&vbo[0]);
   glGenTextures(numTexts, (GLuint*)&textIDs[0]);
   glBindVertexArray(vao[0]);
@@ -39,9 +39,10 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
     curMesh = meshes->GetMesh(i);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
     glBufferData(GL_ARRAY_BUFFER, curMesh->vertData.size()*sizeof(float),
-		 (const void*) &(curMesh->vertData[i]), GL_STATIC_DRAW);
+		 (const void*) &(curMesh->vertData[0]), GL_STATIC_DRAW);
     
     if (curMesh->textData) {
+      Debug::Instance().PrintError("Has mesh");
       glBindTexture(GL_TEXTURE_2D, textIDs[j]);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -49,7 +50,7 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, curMesh->textWidth,
 		   curMesh->textHeight, 0, GL_RGB, GL_UNSIGNED_BYTE,
-		   curMesh->textData);      
+		   curMesh->textData);
 
       glGenerateMipmap(GL_TEXTURE_2D);
       meshes->SetTextID(i, j);
@@ -90,37 +91,36 @@ unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera,
   
   aspect = (float)width/(float)height;
   pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
-  vMat = glm::lookAt(camera->getPosition(), camera->GetLookAt(),
-		     camera->GetUp());
+  vMat = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -100.0f),
+		     glm::vec3(0.0f, 1.0f, 0.0f));
 
   shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
   shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
   
   meshData* curMesh = loadedData->GetMesh(meshIndex);
+  //Debug::Instance().PrintMeshData(curMesh->vertData);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo[meshIndex]);
 
-  mMat = glm::translate(glm::mat4(1.0),glm::vec3(0.0f, 0.0f, -5.0f));
-  mMat *= glm::rotate(glm::mat4(1.0f), 0.5f, glm::vec3(1.0f, 0.5f, 0.0f));
+  mMat = glm::translate(glm::mat4(1.0),glm::vec3(0.0f, 0.0f, curMesh->min.z-curMesh->max.z));
+  mMat *= glm::rotate(glm::mat4(1.0f), (float)context->GetTime(), glm::vec3(1.0f, 0.5f, 0.0f));
   shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);    
     
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);  
 
   if (curMesh->textData) {
-    //Debug::Instance().PrintError("Test");
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);
     glEnableVertexAttribArray(2);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textIDs[curMesh->textID]);      
   }
     
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-    
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
-  glDrawArrays(GL_TRIANGLES, 0, curMesh->vertData.size());
+  glDrawArrays(GL_TRIANGLES, 0, curMesh->numTriangles);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
   return renderTexture;
@@ -130,6 +130,9 @@ void Renderer::clearFramebuffer() {
   glDeleteFramebuffers(1, &fbo);
   glDeleteTextures(1, &renderTexture);
   glDeleteRenderbuffers(1, &renderbuffer);
+  fbo = 0;
+  renderTexture = 0;
+  renderbuffer = 0;
 }
 
 GLuint Renderer::getVBOIdx(int idx) {
@@ -257,10 +260,10 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera,
 }
 */
 void Renderer::drawMeshPreviews(DataFileHandler* loadedData, Camera* camera) {
-  for (int i=0; i<2; i++) {
+  for (int i=0; i<1; i++) {
     context->ClearDepthBuffer();
     context->ClearColorBuffer();    
-
+ 
     shaderHandler->Use(0);
     context->UseProgram(shaderHandler->GetCurProg());
 

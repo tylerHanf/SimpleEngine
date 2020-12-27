@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <GLM/glm.hpp>
 
 #include "Debug.h"
 
@@ -14,6 +15,9 @@ struct meshData {
   unsigned int textID;  
   int textWidth=0;
   int textHeight=0;
+  int numTriangles=0;
+  glm::vec3 min;
+  glm::vec3 max;
 };
 
 class DataFileHandler {
@@ -33,9 +37,10 @@ class DataFileHandler {
   std::vector<meshData> objectData;
   int numTextures = 0;
   int numMeshes = 0;
-  //std::vector<unsigned char*> textures;
   const char* mesh_ext = ".obj";
   const char* material_ext = ".mtl";
   const char* mesh_dir = ".\\Data\\Objects\\";
   const char* mesh_ls_dir = ".\\Data\\Listings\\Meshes.txt";
+
+  void PrintData(void);
 };

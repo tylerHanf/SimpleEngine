@@ -115,7 +115,6 @@ int main(int argc, char** argv) {
     s_handler.AddShader(VERT_SHADER_PATH, FRAG_SHADER_PATH);
     s_handler.AddShader(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
     s_handler.AddShader(VERT_COLLIDER_SHADER_PATH, FRAG_COLLIDER_SHADER_PATH);
-    //s_handler.AddShader(VERT_GUI_SHADER_PATH, FRAG_GUI_SHADER_PATH);
     Renderer renderer = Renderer(&curContext, &s_handler, &mode);
     Editor editor = Editor(&renderer, curContext.getWindow(), &e_handler);
 
@@ -125,7 +124,6 @@ int main(int argc, char** argv) {
     glfwSetInputMode(curContext.getWindow(), GLFW_STICKY_KEYS, GLFW_TRUE);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
-    renderer.drawMeshPreviews(&dataHandler, editor.GetCamera());
     
     while(!curContext.ExitWindow()) {
         curContext.Swap();

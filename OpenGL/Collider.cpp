@@ -9,12 +9,10 @@ Collider::Collider(void) {
 }
 
 Collider::Collider(glm::vec3* inMin, glm::vec3* inMax, glm::vec3* inLocation, bool colType) {
-
   min = inMin;
   max = inMax;
   location = inLocation;
   size = glm::vec3(((*max).x-(*min).x)/2, ((*max).y-(*min).y)/2, ((*max).z-(*min).z)/2);
-  Debug::Instance().PrintError((*max).x);  
   isBox = colType;
   entID = colType == true ? 1 : 2;
 }

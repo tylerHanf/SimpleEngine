@@ -1,3 +1,2 @@
+basementFloor 0,0,0
 woodenFloor 0,0,0
-cube 0,0,0
-sphereCol 0,0,0

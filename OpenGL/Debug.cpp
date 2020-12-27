@@ -27,3 +27,11 @@ void Debug::PrintError(float val) {
 void Debug::PrintGLFWError() {
     std::cout << glfwErrorCode << std::endl;
 }
+
+void Debug::PrintMeshData(std::vector<float> meshData) {
+  for (int i=0; i<meshData.size(); i+=3) {
+    Debug::Instance().PrintError(meshData[i]);
+    Debug::Instance().PrintError(meshData[i+1]);
+    Debug::Instance().PrintError(meshData[i+2]);
+  }
+}
