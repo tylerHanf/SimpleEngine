@@ -11,9 +11,8 @@
 class GuiContext {
  public:
   GuiContext(GLFWwindow* window);
-  void RenderGui(MouseRay* ray, EntityHandler* selectedEnt, GLuint* fbo);
   void ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
-			Renderer* renderer);
+			Renderer* renderer, EntityHandler* e_handler);
   void handleCollider(Entity* selectedEnt);
   bool mouseInUse(void);
   void StartFrame();

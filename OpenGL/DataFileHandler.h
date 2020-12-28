@@ -41,6 +41,4 @@ class DataFileHandler {
   const char* material_ext = ".mtl";
   const char* mesh_dir = ".\\Data\\Objects\\";
   const char* mesh_ls_dir = ".\\Data\\Listings\\Meshes.txt";
-
-  void PrintData(void);
 };

@@ -6,8 +6,6 @@
 class Entity {
  public:
   Entity(int inMeshIdx, glm::vec3 location);
-  Entity(int inMeshIdx, glm::vec3 location, bool colType);
-  ~Entity();
   glm::vec3 getLocation(void);
   int getMeshIdx(void);
   glm::mat4 getTransform(void);
@@ -25,7 +23,7 @@ class Entity {
   //Assume entity only has one mesh, could
   //make vector if there is a potential for multiple
   int meshIdx;
-  int textureID;       // MAYBE
+  //int textureID;       // MAYBE
   bool hasCollider;
   Collider collider;
 };

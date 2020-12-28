@@ -17,16 +17,6 @@ bool GuiContext::mouseInUse() {
   return ImGui::GetIO().WantCaptureMouse;
 }
 
-void GuiContext::RenderGui(MouseRay* pointer, EntityHandler* selectedEnt, GLuint* fbo) {
-  ImGui_ImplOpenGL3_NewFrame();
-  ImGui_ImplGlfw_NewFrame();
-  ImGui::NewFrame();
-  ImGui::ShowDemoWindow();
-  //ShowMeshSelector(selectedEnt, fbo);
-  ImGui::Render();
-  ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
 void GuiContext::StartFrame() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
@@ -54,11 +44,13 @@ void GuiContext::handleCollider(Entity* selectedEnt) {
 }
 
 void GuiContext::ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
-				  Renderer* renderer) {
-  //std::vector<std::string> meshNames = e_handler->GetMeshNames();
+				  Renderer* renderer, EntityHandler* e_handler) {
   if(ImGui::CollapsingHeader("Add entity")) {
     for (int i=0; i<loadedData->NumMeshes(); i++) {
-      ImGui::Selectable(loadedData->GetMeshName(i));
+      if(ImGui::Selectable(loadedData->GetMeshName(i))) {
+	e_handler->AddEntity(i, camera->GetLookAt()-glm::vec3(0.0f, 5.0f, -10.0f));
+	ImGui::GetMousePos();
+      }
       if (ImGui::IsItemHovered()) {
 	unsigned int textureID = renderer->previewMesh(loadedData, camera, i);
 	int windowWidth = ImGui::GetWindowWidth();

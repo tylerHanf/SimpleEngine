@@ -104,7 +104,6 @@ void GetMouseInput(GLFWwindow* window, Camera* camera) {
 
 int main(int argc, char** argv) {
     ShaderHandler s_handler;
-    
     ModeHandler mode = ModeHandler((const char**) argv, argc);
     InitProgram();
     Camera camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -139,13 +138,14 @@ int main(int argc, char** argv) {
 
 	//renderer.DisplayEditor(&e_handler, editor.GetCamera(), editor.GetGuiContext());
 	//Test for drawing validly
-	renderer.drawMeshPreviews(&dataHandler, editor.GetCamera());
+	renderer.DisplayEditor(&e_handler, editor.GetCamera(), &dataHandler);
 
 	//Gui render
 	editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
 	editor.GetGuiContext()->StartFrame();
 	editor.GetGuiContext()->ShowMeshSelector(&dataHandler, editor.GetCamera(),
-						 &renderer);
+						 &renderer, &e_handler);
+	
 	editor.GetGuiContext()->Render();
 	renderer.clearFramebuffer();
     }

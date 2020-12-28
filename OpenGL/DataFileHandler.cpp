@@ -35,8 +35,6 @@ void DataFileHandler::LoadMeshes(void) {
 	  GetVertices(&newMesh, meshFile.c_str());
 	  meshFile = "";	    
 	}
-	
-	//PrintData();
     }
 }
 
@@ -133,16 +131,4 @@ int DataFileHandler::NumTextures(void) {
 
 const char* DataFileHandler::GetMeshName(int meshIdx) {
   return objectData[meshIdx].meshName.c_str();
-}
-
-void DataFileHandler::PrintData(void) {
-  for (int i=0; i<numMeshes; i++) {
-    Debug::Instance().PrintError("----------------MESH-------------------");
-    meshData curMesh = objectData[i];
-    for (int j=0; j<curMesh.vertData.size(); j+=3) {
-      Debug::Instance().PrintError(curMesh.vertData[i]);
-      Debug::Instance().PrintError(curMesh.vertData[i+1]);
-      Debug::Instance().PrintError(curMesh.vertData[i+2]);      
-    }
-  }
 }

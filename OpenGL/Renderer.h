@@ -22,7 +22,7 @@ class Renderer {
  public:
   Renderer(GL_Context* contextObj, ShaderHandler* shaders, ModeHandler* modeH);
   void DisplayDebug(EntityHandler* entities, Camera* camera);
-  //void DisplayEditor(EntityHandler* entities, Camera* camera, GuiContext* gContext);
+  void DisplayEditor(EntityHandler* entities, Camera* camera, DataFileHandler* loadedData);
   void LoadData(DataFileHandler* meshes, Camera* camera);
   void InitializeFramebuffer(DataFileHandler* loadedData);
   void drawMeshPreviews(DataFileHandler* loadedData, Camera* camera);

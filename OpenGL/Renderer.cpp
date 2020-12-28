@@ -19,7 +19,6 @@ Loads vertices into GPU from entity objects
 void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
   //Note the number of VAOs, just for initial build
   int numMeshes = meshes->NumMeshes();
-  Debug::Instance().PrintError(numMeshes);
   int numTexts = meshes->NumTextures();
   int numVAOs = 1;
   meshData* curMesh;
@@ -42,7 +41,6 @@ void Renderer::LoadData(DataFileHandler* meshes, Camera* camera) {
 		 (const void*) &(curMesh->vertData[0]), GL_STATIC_DRAW);
     
     if (curMesh->textData) {
-      Debug::Instance().PrintError("Has mesh");
       glBindTexture(GL_TEXTURE_2D, textIDs[j]);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -98,7 +96,6 @@ unsigned int Renderer::previewMesh(DataFileHandler* loadedData, Camera* camera,
   shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
   
   meshData* curMesh = loadedData->GetMesh(meshIndex);
-  //Debug::Instance().PrintMeshData(curMesh->vertData);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo[meshIndex]);
 
@@ -200,17 +197,16 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
 	glEnableVertexAttribArray(2);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	glDrawArrays(GL_TRIANGLES, 0, entities->NumTriangles(meshIdx));
+	//glDrawArrays(GL_TRIANGLES, 0, entities->NumTriangles(meshIdx));
 
 	mvStack.pop();
     }
     mvStack.pop();
 }
 
-/*
 void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera,
-			     GuiContext* gContext) {
-  std::vector<Collider*> showColliders;
+			     DataFileHandler* loadedData) {
+  //std::vector<Collider*> showColliders;
   context->ClearDepthBuffer();
   context->ClearColorBuffer();
   shaderHandler->Use(0);
@@ -225,40 +221,51 @@ void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera,
     
   shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
   shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
-  shaderHandler->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(0.9f, 0.8f, 0.9f));
+  //shaderHandler->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(0.9f, 0.8f, 0.9f));
   shaderHandler->SetVec3Uniform(Uniform(L_POS), glm::vec3(2.0f, 20.0f, 1.0f));
   shaderHandler->SetVec3Uniform(Uniform(L_COLOR), glm::vec3(1.0f, 1.0f, 0.80f));
     
   mvStack.push(glm::mat4(1.0));
 
-  int numEnts = 0;
+  int numEnts = entities->NumEntities();
   int meshIdx;
+  Entity* curEntity;
+  meshData* curMesh;
   for (int i=0; i<numEnts; i++) {
-    Entity* curEntity = entities->GetEntity(i);
+    curEntity = entities->GetEntity(i);
     meshIdx = curEntity->getMeshIdx();
+    curMesh = loadedData->GetMesh(meshIdx);
+    
+    /*
     if (curEntity->showingCollider()) {
       showColliders.push_back(curEntity->getCollider());
-      }
+    }*/
+    
     mvStack.push(mvStack.top());
     mvStack.top() *= curEntity->getTransform();
     shaderHandler->SetMat4Uniform(Uniform(MODEL), mvStack.top());    
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[i]);
-    //glBindBuffer(GL_FRAMEBUFFER, fbo[0]); 
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[meshIdx]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);	
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
+
+    if (curMesh->textData) {
+      glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);
+      glEnableVertexAttribArray(2);
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, textIDs[curMesh->textID]);      
+    }    
+    
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    glDrawArrays(GL_TRIANGLES, 0, entities->NumTriangles(meshIdx));
+    glDrawArrays(GL_TRIANGLES, 0, curMesh->numTriangles);
     mvStack.pop();
   }
   mvStack.pop();
-    //drawColliders(showColliders, entities);
+  //drawColliders(showColliders, entities);
 }
-*/
+
 void Renderer::drawMeshPreviews(DataFileHandler* loadedData, Camera* camera) {
   for (int i=0; i<1; i++) {
     context->ClearDepthBuffer();
@@ -290,12 +297,12 @@ void Renderer::drawMeshPreviews(DataFileHandler* loadedData, Camera* camera) {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     
-    if (curMesh->textData) {
+if (curMesh->textData) {
       glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (const void*)24);
       glEnableVertexAttribArray(2);
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, textIDs[curMesh->textID]);      
-    }
+    }    
     
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);

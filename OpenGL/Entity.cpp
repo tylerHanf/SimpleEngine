@@ -3,18 +3,10 @@
 #include <math.h>
 
 Entity::Entity(int inMeshIdx, glm::vec3 locationObj) {
-     location = locationObj;
-     transform = glm::translate(glm::mat4(1.0f), location);
-     meshIdx = inMeshIdx;
-     hasCollider = false;
-}
-
-Entity::Entity(int inMeshIdx, glm::vec3 locationObj, bool colType) {
-     location = locationObj;
-     transform = glm::translate(glm::mat4(1.0f), location);
-     meshIdx = inMeshIdx;
-     //collider = Collider(, &location, colType);
-     hasCollider = true;
+  location = locationObj;
+  transform = glm::translate(glm::mat4(1.0f), location);
+  meshIdx = inMeshIdx;
+  hasCollider = false;
 }
 
 glm::vec3 Entity::getLocation(void) {
