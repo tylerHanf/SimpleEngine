@@ -2,7 +2,10 @@
 #include "Debug.h"
 #include <math.h>
 
-Entity::Entity(int inMeshIdx, glm::vec3 locationObj) {
+Entity::Entity(int inMeshIdx, glm::vec3 locationObj, glm::vec3 inMin, glm::vec3 inMax) :
+  collider(inMin, inMax, locationObj, BOX)  
+
+{
   location = locationObj;
   transform = glm::translate(glm::mat4(1.0f), location);
   meshIdx = inMeshIdx;

@@ -37,10 +37,6 @@ void GuiContext::handleCollider(Entity* selectedEnt) {
   }
   else if (ImGui::Button("Show collider"))
     selectedEnt->toggleCollider();
-  
-  ImGui::SameLine();
-  if (ImGui::Button("Switch Collider Type"))
-    selectedEnt->getCollider()->toggleShape();
 }
 
 void GuiContext::ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
@@ -48,8 +44,9 @@ void GuiContext::ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
   if(ImGui::CollapsingHeader("Add entity")) {
     for (int i=0; i<loadedData->NumMeshes(); i++) {
       if(ImGui::Selectable(loadedData->GetMeshName(i))) {
-	e_handler->AddEntity(i, camera->GetLookAt()-glm::vec3(0.0f, 5.0f, -10.0f));
-	ImGui::GetMousePos();
+	meshData* mesh = loadedData->GetMesh(i);
+	e_handler->AddEntity(i, camera->GetLookAt()-glm::vec3(0.0f, 5.0f, -10.0f),
+			     mesh->min, mesh->max);
       }
       if (ImGui::IsItemHovered()) {
 	unsigned int textureID = renderer->previewMesh(loadedData, camera, i);
@@ -62,5 +59,17 @@ void GuiContext::ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
 	ImGui::End();
       }
     }
+  }
+}
+
+
+void GuiContext::ShowEntityProperties(EntityHandler* e_handler, DataFileHandler* loadedData,
+				      Entity* selectedEnt) {
+  int meshIdx = selectedEnt->getMeshIdx();
+  if (!(meshIdx < 0 || meshIdx > e_handler->NumEntities())) {
+    ImGui::Begin(loadedData->GetMeshName(meshIdx));
+    glm::vec3 location = selectedEnt->getLocation();
+    ImGui::Text("Location: <%f, %f, %f>", location.x, location.y, location.z);
+    ImGui::End();
   }
 }

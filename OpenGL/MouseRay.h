@@ -14,7 +14,7 @@ class MouseRay {
 	      glm::mat4 pMat, glm::mat4 vMat, glm::vec3 orig);
   glm::vec3 getDirection(void);
   glm::vec3 getOrigin(void);
-  Entity* pointingAt(EntityHandler* entities);
+  int pointingAt(EntityHandler* entities);
   
  private:
   glm::vec3 ray;

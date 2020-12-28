@@ -13,6 +13,8 @@ class GuiContext {
   GuiContext(GLFWwindow* window);
   void ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
 			Renderer* renderer, EntityHandler* e_handler);
+  void ShowEntityProperties(EntityHandler* e_handler, DataFileHandler* loadedData,
+			    Entity* selectedEnt);
   void handleCollider(Entity* selectedEnt);
   bool mouseInUse(void);
   void StartFrame();

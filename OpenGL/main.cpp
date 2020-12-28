@@ -116,6 +116,7 @@ int main(int argc, char** argv) {
     s_handler.AddShader(VERT_COLLIDER_SHADER_PATH, FRAG_COLLIDER_SHADER_PATH);
     Renderer renderer = Renderer(&curContext, &s_handler, &mode);
     Editor editor = Editor(&renderer, curContext.getWindow(), &e_handler);
+    GuiContext* guiContext = editor.GetGuiContext();
 
     renderer.LoadData(&dataHandler, &camera);
 
@@ -142,11 +143,16 @@ int main(int argc, char** argv) {
 
 	//Gui render
 	editor.GetKeyInput(curContext.getWindow(), &mode, &curContext);
-	editor.GetGuiContext()->StartFrame();
-	editor.GetGuiContext()->ShowMeshSelector(&dataHandler, editor.GetCamera(),
-						 &renderer, &e_handler);
+	guiContext->StartFrame();
+	guiContext->ShowMeshSelector(&dataHandler, editor.GetCamera(),
+				     &renderer, &e_handler);
 	
-	editor.GetGuiContext()->Render();
+	if (editor.GetSelectedEntity()) {
+	  guiContext->ShowEntityProperties(&e_handler, &dataHandler,
+	  editor.GetSelectedEntity());
+	}
+		
+	guiContext->Render();
 	renderer.clearFramebuffer();
     }
     

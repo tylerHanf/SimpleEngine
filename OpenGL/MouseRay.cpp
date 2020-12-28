@@ -28,20 +28,20 @@ glm::vec3 MouseRay::getOrigin(void) {
   return origin;
 }
 
-Entity* MouseRay::pointingAt(EntityHandler* entities) {
-  Entity* pickedEnt = NULL;
+int MouseRay::pointingAt(EntityHandler* entities) {
+  int pickedEnt = -1;
   float closest = 10000;
   float current;
-  
+
   for (int i=0; i<entities->NumEntities(); i++) {
     Entity* curEnt = entities->GetEntity(i);
     if (curEnt->getCollider()->intersects(origin, ray, &current)) {
       if (current < closest) {
 	closest = current;
-	pickedEnt = curEnt;
+	pickedEnt = i;
       }
     }
   }
-  if (closest == 10000) return NULL;
+  if (closest == 10000) return -1;
   return pickedEnt;
 }

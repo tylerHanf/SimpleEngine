@@ -118,6 +118,10 @@ void DataFileHandler::SetTextID(int meshIdx, int textureID) {
 }
 
 meshData* DataFileHandler::GetMesh(int meshIdx) {
+  if (meshIdx < 0 || meshIdx >= objectData.size()) {
+    Debug::Instance().PrintError("GetMesh out of range");
+    return NULL;
+  }
   return &(objectData[meshIdx]);
 }
 
@@ -130,5 +134,9 @@ int DataFileHandler::NumTextures(void) {
 }
 
 const char* DataFileHandler::GetMeshName(int meshIdx) {
+  if (meshIdx < 0 || meshIdx >= objectData.size()) {
+    Debug::Instance().PrintError("GetMeshName out of range");
+    return NULL;
+  }
   return objectData[meshIdx].meshName.c_str();
 }

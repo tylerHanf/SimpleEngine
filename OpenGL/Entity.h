@@ -5,7 +5,7 @@
 
 class Entity {
  public:
-  Entity(int inMeshIdx, glm::vec3 location);
+  Entity(int inMeshIdx, glm::vec3 location, glm::vec3 inMin, glm::vec3 inMax);
   glm::vec3 getLocation(void);
   int getMeshIdx(void);
   glm::mat4 getTransform(void);
