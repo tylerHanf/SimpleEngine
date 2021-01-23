@@ -21,6 +21,10 @@ bool Collider::isBoxCol(void) {
   return colliderType == BOX ? true : false;
 }
 
+glm::vec3& Collider::getSize(void) {
+  return size;
+}
+
 bool Collider::isShowing(void) {
   return show;
 }

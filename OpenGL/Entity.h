@@ -5,6 +5,7 @@
 
 class Entity {
  public:
+  Entity(void);
   Entity(int inMeshIdx, glm::vec3 location, glm::vec3 inMin, glm::vec3 inMax);
   glm::vec3 getLocation(void);
   int getMeshIdx(void);

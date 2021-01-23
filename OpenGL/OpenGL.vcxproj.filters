@@ -65,6 +65,9 @@
     <ClCompile Include="Collider.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectHandles.cpp">
+      <Filter>Editor\ObjectHandles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ExternalAPIs">
@@ -186,6 +189,12 @@
     </Filter>
     <Filter Include="ExternalAPIs\include\STB_IMAGE">
       <UniqueIdentifier>{3ce85ad3-6362-4214-8ec1-073f044b3e58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\ObjectHandles">
+      <UniqueIdentifier>{eb0c746b-1e87-4a5c-b89d-008bc688d954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\ObjectHandles\include">
+      <UniqueIdentifier>{9f04935f-f844-4d25-a65c-0d1762a99d07}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1232,6 +1241,9 @@
     </ClInclude>
     <ClInclude Include="..\ExternalAPIs\include\STB_IMAGE\stb_image.h">
       <Filter>ExternalAPIs\include\STB_IMAGE</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectHandles.h">
+      <Filter>Editor\ObjectHandles\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,2 +1,5 @@
 basementFloor 0,0,0
 woodenFloor 0,0,0
+moveArrow 0,0,0
+scaleArrow 0,0,0
+rotateArrow 0,0,0

@@ -42,7 +42,7 @@ void GuiContext::handleCollider(Entity* selectedEnt) {
 void GuiContext::ShowMeshSelector(DataFileHandler* loadedData, Camera* camera,
 				  Renderer* renderer, EntityHandler* e_handler) {
   if(ImGui::CollapsingHeader("Add entity")) {
-    for (int i=0; i<loadedData->NumMeshes(); i++) {
+    for (int i=0; i<loadedData->NumMeshes()-3; i++) {
       if(ImGui::Selectable(loadedData->GetMeshName(i))) {
 	meshData* mesh = loadedData->GetMesh(i);
 	e_handler->AddEntity(i, camera->GetLookAt()-glm::vec3(0.0f, 5.0f, -10.0f),

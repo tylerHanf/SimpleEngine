@@ -2,6 +2,15 @@
 #include "Debug.h"
 #include <math.h>
 
+Entity::Entity(void) :
+  collider(glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f), BOX)
+{
+  location = glm::vec3(0.0f, 0.0f, 0.0f);
+  transform = glm::mat4(1.0f);
+  meshIdx = 0;
+  hasCollider = false;
+}
+
 Entity::Entity(int inMeshIdx, glm::vec3 locationObj, glm::vec3 inMin, glm::vec3 inMax) :
   collider(inMin, inMax, locationObj, BOX)  
 

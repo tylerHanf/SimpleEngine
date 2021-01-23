@@ -20,6 +20,8 @@ const char* VERT_COLLIDER_SHADER_PATH = "ColliderVert.glsl";
 const char* FRAG_COLLIDER_SHADER_PATH = "ColliderFrag.glsl";
 const char* VERT_GUI_SHADER_PATH = "GuiVertShader.glsl";
 const char* FRAG_GUI_SHADER_PATH = "GuiFragShader.glsl";
+const char* VERT_OBJECT_HANDLER_SHADER_PATH = "vertObjectHandler.glsl";
+const char* FRAG_OBJECT_HANDLER_SHADER_PATH = "fragObjectHandler.glsl";
 int width, height;
 
 /*
@@ -114,8 +116,9 @@ int main(int argc, char** argv) {
     s_handler.AddShader(VERT_SHADER_PATH, FRAG_SHADER_PATH);
     s_handler.AddShader(VERT_LIGHT_SHADER_PATH, FRAG_LIGHT_SHADER_PATH);
     s_handler.AddShader(VERT_COLLIDER_SHADER_PATH, FRAG_COLLIDER_SHADER_PATH);
+    s_handler.AddShader(VERT_OBJECT_HANDLER_SHADER_PATH, FRAG_OBJECT_HANDLER_SHADER_PATH);
     Renderer renderer = Renderer(&curContext, &s_handler, &mode);
-    Editor editor = Editor(&renderer, curContext.getWindow(), &e_handler);
+    Editor editor = Editor(&renderer, curContext.getWindow(), &e_handler, &dataHandler);
     GuiContext* guiContext = editor.GetGuiContext();
 
     renderer.LoadData(&dataHandler, &camera);
@@ -150,6 +153,8 @@ int main(int argc, char** argv) {
 	if (editor.GetSelectedEntity()) {
 	  guiContext->ShowEntityProperties(&e_handler, &dataHandler,
 	  editor.GetSelectedEntity());
+	  renderer.DisplayObjectHandles(editor.GetObjectHandles(),
+					editor.GetSelectedEntity());
 	}
 		
 	guiContext->Render();

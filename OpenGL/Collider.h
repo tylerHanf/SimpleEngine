@@ -18,6 +18,7 @@ class Collider {
   bool isShowing(void);
   bool intersects(glm::vec3 origin, glm::vec3 direction, float* intersection);
   void toggleShow();
+  glm::vec3& getSize(void);
 
  private:
   bool show = false;

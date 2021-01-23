@@ -11,6 +11,7 @@
 #include "ModeHandler.h"
 #include "MouseRay.h"
 #include "DataFileHandler.h"
+#include "ObjectHandles.h"
 
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
@@ -34,6 +35,8 @@ class Renderer {
   GLuint* getFramebuffer(int index);
   GLuint* getTextID(int idx);
   void clearFramebuffer();
+  void DisplayObjectHandles(ObjectHandles* objectHandles,
+			    Entity* currentEntity);
     
  private:
   std::vector<GLuint> vao, vbo;

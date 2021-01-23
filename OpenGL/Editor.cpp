@@ -4,9 +4,11 @@
 /*
 TODO: FIX BOX COLLIDER PARAMS
 */
-Editor::Editor(Renderer* curRenderer, GLFWwindow* window, EntityHandler* curEntities) :
+Editor::Editor(Renderer* curRenderer, GLFWwindow* window, EntityHandler* curEntities,
+	       DataFileHandler* dataHandler) :
   camera(glm::vec3(0.0f, 0.0f, 0.0f), 2.0f),
-  guiContext(window)
+  guiContext(window),
+  objectHandles(dataHandler)
 {
     renderer = curRenderer;
     entities = curEntities;
@@ -91,4 +93,7 @@ Entity* Editor::GetSelectedEntity(void) {
   return NULL;
 }
 
+ObjectHandles* Editor::GetObjectHandles(void) {
+  return &objectHandles;
+}
 

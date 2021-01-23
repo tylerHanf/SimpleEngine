@@ -177,6 +177,7 @@
     <ClCompile Include="GL_Context.cpp" />
     <ClCompile Include="ModeHandler.cpp" />
     <ClCompile Include="MouseRay.cpp" />
+    <ClCompile Include="ObjectHandles.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
@@ -527,6 +528,7 @@
     <ClInclude Include="GL_Context.h" />
     <ClInclude Include="ModeHandler.h" />
     <ClInclude Include="MouseRay.h" />
+    <ClInclude Include="ObjectHandles.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderHandler.h" />

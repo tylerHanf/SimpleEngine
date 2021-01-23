@@ -1,7 +1,7 @@
 #include "Renderer.h"
 #include "Debug.h"
 
-/*
+ /*
 Renderer constructor, also makes rendering program
 Must be called after GL_Context obj is made
 */
@@ -202,6 +202,65 @@ void Renderer::DisplayDebug(EntityHandler* entities, Camera* camera) {
 	mvStack.pop();
     }
     mvStack.pop();
+}
+
+void Renderer::DisplayObjectHandles(ObjectHandles* objectHandles,
+				    Entity* currentEntity) {
+  shaderHandler->Use(3);
+  context->UseProgram(shaderHandler->GetCurProg());
+
+  float height = objectHandles->getSize();  
+  Debug::Instance().PrintError(height);
+
+  mMat = currentEntity->getTransform();
+  mMat *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, height, 0.0f));
+  mMat *= glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 10.0f));  
+
+  shaderHandler->SetMat4Uniform(Uniform(PROJECTION), pMat);
+  shaderHandler->SetMat4Uniform(Uniform(VIEW), vMat);
+  shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
+  shaderHandler->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(1.0f, 0.0f, 0.0f));
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
+  glDrawArrays(GL_TRIANGLES, 0, 558);
+
+  mMat = currentEntity->getTransform();
+  mMat *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, height));
+  mMat *= glm::rotate(glm::mat4(1.0f), (float) 3.14/2, glm::vec3(1.0f, 0.0f, 0.0f));
+  mMat *= glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+  shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
+  shaderHandler->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(0.0f, 0.0f, 1.0f));
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
+  glDrawArrays(GL_TRIANGLES, 0, 558);
+
+  mMat = currentEntity->getTransform();
+  mMat *= glm::translate(glm::mat4(1.0f), glm::vec3(height, 0.0f, 0.0f));
+  mMat *= glm::rotate(glm::mat4(1.0f), (float) 3.14/2, glm::vec3(0.0f, 0.0f, -1.0f));
+  mMat *= glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 10.0f));
+  shaderHandler->SetMat4Uniform(Uniform(MODEL), mMat);
+  shaderHandler->SetVec3Uniform(Uniform(E_COLOR), glm::vec3(0.0f, 1.0f, 0.0f));
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, 0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (const void*)12);
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnable(GL_DEPTH_TEST);
+  glDepthFunc(GL_LEQUAL);
+  glDrawArrays(GL_TRIANGLES, 0, 558);    
 }
 
 void Renderer::DisplayEditor(EntityHandler* entities, Camera* camera,
