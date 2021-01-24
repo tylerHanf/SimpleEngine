@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
 	
 	if (editor.GetSelectedEntity()) {
 	  guiContext->ShowEntityProperties(&e_handler, &dataHandler,
-	  editor.GetSelectedEntity());
+					   editor.GetSelectedEntity());
 	  renderer.DisplayObjectHandles(editor.GetObjectHandles(),
 					editor.GetSelectedEntity());
 	}

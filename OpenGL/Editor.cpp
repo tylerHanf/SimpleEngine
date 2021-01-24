@@ -63,14 +63,18 @@ void Editor::GetKeyInput(GLFWwindow* window, ModeHandler* curMode,
     glm::mat4 vMat = renderer->getVmat();
     int width, height;
     glfwGetWindowSize(window, &width, &height);
-    pointer.Update(xpos, ypos, width, height, pMat, vMat, camera.getPosition());      
+    pointer.Update(xpos, ypos, width, height, pMat, vMat, camera.getPosition());
+    /*Debug::Instance().PrintError(objectHandles.handleSelected(pointer.getOrigin(),
+      pointer.getDirection()));*/
     int picked = pointer.pointingAt(entities);
+    Debug::Instance().PrintError(picked);
 
-
-    if (picked != -1) {
+    if (picked >= 0 && picked < entities->NumEntities()) {
       selectedEntity = entities->GetEntity(picked);
+      objectHandles.bindObject(selectedEntity);
     }
-    else selectedEntity = 0;
+    
+    else selectedEntity = NULL;
   }
 }
 

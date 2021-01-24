@@ -31,6 +31,6 @@ class Editor {
   GuiContext guiContext;
   Camera camera;
   MouseRay pointer;
-  Entity* selectedEntity;
+  Entity* selectedEntity = NULL;
   ObjectHandles objectHandles;
 };
